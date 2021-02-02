@@ -1,6 +1,4 @@
-add_library(
-    GLFW 
-
+add_library(GLFW
     include/GLFW/glfw3.h
     include/GLFW/glfw3native.h
     src/internal.h 
@@ -15,9 +13,7 @@ add_library(
 
 if (WIN32) 
     message(STATUS "Using Win32 for window creation")
-    target_sources(
-        GLFW PRIVATE
-
+    target_sources(GLFW PRIVATE
         src/win32_platform.h 
         src/win32_joystick.h 
         src/wgl_context.h
@@ -37,10 +33,10 @@ if (WIN32)
     target_compile_definitions(GLFW PRIVATE _GLFW_WIN32)
 elseif(UNIX)
     message(STATUS "Using X11 for window creation")
-    target_sources(
-        GLFW PRIVATE
-
-        src/x11_platform.h src/xkb_unicode.h src/posix_time.h
+    target_sources(GLFW PRIVATE
+        src/x11_platform.h 
+        src/xkb_unicode.h 
+        src/posix_time.h
         src/posix_thread.h 
         src/glx_context.h 
         src/egl_context.h
@@ -59,9 +55,7 @@ elseif(UNIX)
     target_compile_definitions(GLFW PRIVATE _GLFW_X11)
 elseif(APPLE)
     message(STATUS "Using Cocoa for window creation")
-    target_sources(
-        GLFW PRIVATE
-
+    target_sources(GLFW PRIVATE
         src/cocoa_platform.h 
         src/cocoa_joystick.h
         src/posix_thread.h
