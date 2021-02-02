@@ -1,0 +1,28 @@
+Language: Cpp
+
+PointerAlignment: Left
+IndentWidth: 4
+IndentPPDirectives: BeforeHash 
+ColumnLimit: 120
+AccessModifierOffset: -4
+FixNamespaceComments: true
+NamespaceIndentation: All 
+AlwaysBreakTemplateDeclarations: Yes 
+AllowShortFunctionsOnASingleLine: InlineOnly
+AllowShortCaseLabelsOnASingleLine: true
+Cpp11BracedListStyle: false
+
+PenaltyReturnTypeOnItsOwnLine: 999999
+
+BreakBeforeBraces: Custom
+BraceWrapping:
+    AfterNamespace: false 
+    AfterControlStatement: true
+    AfterEnum: true
+    AfterClass: true
+    AfterStruct: true
+    AfterUnion: true
+    BeforeCatch: true
+    BeforeElse: true
+    AfterFunction: true
+    AfterCaseLabel: true
