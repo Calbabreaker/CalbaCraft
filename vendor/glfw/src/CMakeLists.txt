@@ -180,3 +180,4 @@ if (MSVC90)
 endif()
 
 target_link_libraries(glfw INTERFACE "${GLFW_SOURCE_DIR}/include/")
+target_compile_definitions(glfw INTERFACE GLFW_INCLUDE_NONE)
