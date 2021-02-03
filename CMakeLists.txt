@@ -21,3 +21,4 @@ include(cmake/project_warnings.cmake)
 add_subdirectory(src)
 
 add_subdirectory(vendor/glfw)
+add_subdirectory(vendor/spdlog)

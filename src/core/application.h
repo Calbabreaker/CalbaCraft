@@ -1,3 +1,7 @@
+#pragma once
+
+#include "window.h"
+
 class Application
 {
 public:
