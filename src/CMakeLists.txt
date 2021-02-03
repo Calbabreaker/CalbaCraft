@@ -26,3 +26,8 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME} PRIVATE GLFW)
 target_link_libraries(${PROJECT_NAME} PRIVATE SPDLOG)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE stdc++fs)
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:CC_DEBUG>")
+target_compile_definitions(${PROJECT_NAME} PRIVATE "$<$<CONFIG:RELEASE>:CC_RELEASE>")
