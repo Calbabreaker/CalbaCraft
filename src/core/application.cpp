@@ -1,9 +1,8 @@
 #include "application.h"
 
-#include <iostream>
-
 Application::Application()
 {
+    m_window = std::make_unique<Window>();
 }
 
 Application::~Application()
@@ -14,9 +13,8 @@ void Application::run()
 {
     m_running = true;
 
-    std::cout << "Running" << std::endl;
-
     while (m_running)
     {
+        m_window->onUpdate();
     }
 }

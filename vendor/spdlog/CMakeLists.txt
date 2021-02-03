@@ -1,4 +1,4 @@
-add_library(SPDLOG 
+add_library(spdlog 
     src/spdlog.cpp 
     src/stdout_sinks.cpp 
     src/color_sinks.cpp 
@@ -8,6 +8,6 @@ add_library(SPDLOG
     src/fmt.cpp
 )
 
-target_compile_definitions(SPDLOG PRIVATE SPDLOG_COMPILED_LIB)
+target_compile_definitions(spdlog PRIVATE SPDLOG_COMPILED_LIB)
 
-target_include_directories(SPDLOG PUBLIC include/)
+target_include_directories(spdlog PUBLIC include/)

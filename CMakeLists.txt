@@ -15,7 +15,6 @@ endif()
 
 # ---- Includes and subdirectories ----
 
-include(cmake/project_options.cmake)
 include(cmake/project_warnings.cmake)
 
 add_subdirectory(src)
