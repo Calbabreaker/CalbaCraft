@@ -84,13 +84,14 @@ static inline void CC_DEBUGBREAK(void)
 
     // CC_ASSERT will only have the expression, while CC_ASSERT_MSG will have
     // both the expression and a message.
-    #define CC_INTERNAL_ASSERT_IMPL(expr, ...)                                                                         \
-        if (!(expr))                                                                                                   \
+    #define CC_INTERNAL_ASSERT_IMPL(expr, ...)                                                     \
+        if (!(expr))                                                                               \
         CC_LOG_ERROR(__VA_ARGS__), CC_DEBUGBREAK()
 
-    #define CC_ASSERT_MSG(expr, msg, ...) CC_INTERNAL_ASSERT_IMPL(expr, std::string("Assertion failed: ") + msg)
-    #define CC_ASSERT(expr)                                                                                            \
-        CC_INTERNAL_ASSERT_IMPL(expr, "Assertion '{0}' failed at: {1}:{2}", #expr,                                     \
+    #define CC_ASSERT_MSG(expr, msg, ...)                                                          \
+        CC_INTERNAL_ASSERT_IMPL(expr, "Assertion failed: " msg, ##__VA_ARGS__)
+    #define CC_ASSERT(expr)                                                                        \
+        CC_INTERNAL_ASSERT_IMPL(expr, "Assertion '{0}' failed at: {1}:{2}", #expr,                 \
                                 std::filesystem::path(__FILE__).filename().string(), __LINE__)
 
 #else
