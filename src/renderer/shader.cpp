@@ -28,19 +28,29 @@ static uint32_t compileShader(GLenum type, const std::string& source)
     return shaderID;
 }
 
+static void linkProgram(uint32_t program, std::array<uint32_t, 2> shaders)
+{
+    for (uint32_t shader : shaders)
+        glAttachShader(program, shader);
+
+    glLinkProgram(program);
+    int isLinked = 0;
+    glGetProgramiv(program, GL_LINK_STATUS, &isLinked);
+    CC_ASSERT_MSG(isLinked, "Failed to link program!");
+
+    for (uint32_t shader : shaders)
+    {
+        glDetachShader(program, shader);
+        glDeleteShader(shader);
+    }
+}
+
 Shader::Shader(const std::string_view vertexPath, const std::string_view fragmentPath)
 {
     m_handle = glCreateProgram();
     uint32_t vertexShader = compileShader(GL_VERTEX_SHADER, loadFileContents(vertexPath));
     uint32_t fragmentShader = compileShader(GL_FRAGMENT_SHADER, loadFileContents(fragmentPath));
-    glAttachShader(m_handle, vertexShader);
-    glAttachShader(m_handle, fragmentShader);
-
-    glLinkProgram(m_handle);
-    glValidateProgram(m_handle);
-
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+    linkProgram(m_handle, { vertexShader, fragmentShader });
 }
 
 Shader::~Shader()

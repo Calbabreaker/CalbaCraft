@@ -66,9 +66,6 @@ Window::Window(uint32_t width, uint32_t height, const std::string& title)
         CC_LOG_INFO("  Renderer: {0}", glGetString(GL_RENDERER));
         CC_LOG_INFO("  Version: {0}", glGetString(GL_VERSION));
 
-        CC_ASSERT_MSG(GLVersion.major > 4 || (GLVersion.major == 4 && GLVersion.minor >= 5),
-                      "CalbaCraft requires at least OpenGL version 4.5!");
-
 #if CC_DEBUG
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
