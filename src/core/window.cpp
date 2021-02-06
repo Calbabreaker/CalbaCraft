@@ -7,18 +7,16 @@ static void GLFWErrorCallback(int error, const char* description)
     CC_LOG_ERROR("GLFW Error ({0}): {1}", error, description);
 }
 
-static void OpenGLMessageCallback(unsigned /*source*/, unsigned /*type*/, unsigned id,
+static void OpenGLMessageCallback(unsigned /*source*/, unsigned /*type*/, unsigned /*id*/,
                                   unsigned severity, int /*length*/, const char* message,
                                   const void* /*userParam*/)
 {
     switch (severity)
     {
-    case GL_DEBUG_SEVERITY_LOW: CC_LOG_INFO("OpenGL Info ({0}): {1}", id, message); return;
-    case GL_DEBUG_SEVERITY_MEDIUM: CC_LOG_WARN("OpenGL Warn ({0}): {1}", id, message); return;
-    case GL_DEBUG_SEVERITY_HIGH: CC_LOG_ERROR("OpenGL Error ({0}): {1}", id, message); return;
-    case GL_DEBUG_SEVERITY_NOTIFICATION:
-        CC_LOG_TRACE("OpenGL Trace ({0}): {1}", id, message);
-        return;
+    case GL_DEBUG_SEVERITY_LOW: CC_LOG_INFO("OpenGL Info: {0}", message); return;
+    case GL_DEBUG_SEVERITY_MEDIUM: CC_LOG_WARN("OpenGL Warn: {0}", message); return;
+    case GL_DEBUG_SEVERITY_HIGH: CC_LOG_ERROR("OpenGL Error: {0}", message); return;
+    case GL_DEBUG_SEVERITY_NOTIFICATION: CC_LOG_TRACE("OpenGL Trace: {0}", message); return;
     }
 
     CC_ASSERT_MSG(false, "Unknown severity level!");

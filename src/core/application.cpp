@@ -1,6 +1,7 @@
 #include <glad/glad.h>
 
 #include "application.h"
+#include "renderer/shader.h"
 
 Application::Application()
 {
@@ -14,6 +15,9 @@ Application::~Application()
 void Application::run()
 {
     m_running = true;
+
+    Shader shader("shaders/test_vert.glsl", "shaders/test_frag.glsl");
+    shader.bind();
 
     // clang-format off
     std::array<float, 8> vertices = {

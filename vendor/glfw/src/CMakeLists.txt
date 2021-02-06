@@ -179,5 +179,4 @@ if (MSVC90)
     endif()
 endif()
 
-target_link_libraries(glfw INTERFACE "${GLFW_SOURCE_DIR}/include/")
-target_compile_definitions(glfw INTERFACE GLFW_INCLUDE_NONE)
+target_include_directories(glfw INTERFACE "${GLFW_SOURCE_DIR}/include/")

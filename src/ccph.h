@@ -1,10 +1,14 @@
 // Precompiled headers
 
+#pragma once
+
 #include <algorithm>
 #include <chrono>
+#include <fstream>
 #include <functional>
 #include <iostream>
 #include <memory>
+#include <streambuf>
 #include <utility>
 
 // ---- Data Structures ----
