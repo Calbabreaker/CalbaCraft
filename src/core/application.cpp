@@ -18,6 +18,7 @@ void Application::run()
 
     Shader shader("shaders/test_vert.glsl", "shaders/test_frag.glsl");
     shader.bind();
+    shader.setFloat1("u_red", 0.0f);
 
     // clang-format off
     std::array<float, 8> vertices = {
