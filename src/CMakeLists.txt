@@ -2,19 +2,11 @@ file(GLOB_RECURSE SOURCES *.cpp *.h)
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
-# copy resources to build directory
-add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD 
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/res/ $<TARGET_FILE_DIR:${PROJECT_NAME}>)
-
 target_precompile_headers(${PROJECT_NAME} PRIVATE "ccph.h")
 
 set_project_flags(${PROJECT_NAME})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
-target_link_libraries(${PROJECT_NAME} PRIVATE glm)
-target_link_libraries(${PROJECT_NAME} PRIVATE spdlog)
-target_link_libraries(${PROJECT_NAME} PRIVATE glad)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIBS})
 target_link_libraries(${PROJECT_NAME} PRIVATE stdc++fs)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE GLFW_INCLUDE_NONE)

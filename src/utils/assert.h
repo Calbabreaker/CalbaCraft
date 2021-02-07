@@ -95,7 +95,7 @@ static inline void CC_DEBUGBREAK(void)
                                 std::filesystem::path(__FILE__).filename().string(), __LINE__)
 
 #else
-    #define CC_CORE_ASSERT(expr, ...)
-    #define CC_ASSERT(expr, ...)
+    #define CC_ASSERT_MSG(expr, ...)
+    #define CC_ASSERT(expr)
     #define CC_DEBUGBREAK()
 #endif

@@ -13,13 +13,12 @@ if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
     )
 endif()
 
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+set(CONAN_SYSTEM_INCLUDES "On")
+conan_basic_setup()
+
 # ---- Includes and subdirectories ----
 
 include(cmake/project_flags.cmake)
 
 add_subdirectory(src)
-
-add_subdirectory(vendor/glfw)
-add_subdirectory(vendor/spdlog)
-add_subdirectory(vendor/glad)
-add_subdirectory(vendor/glm)
