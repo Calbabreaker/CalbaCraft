@@ -15,7 +15,7 @@ endif()
 
 # ---- Includes and subdirectories ----
 
-include(cmake/project_warnings.cmake)
+include(cmake/project_flags.cmake)
 
 add_subdirectory(src)
 

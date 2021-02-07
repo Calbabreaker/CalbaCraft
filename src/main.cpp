@@ -1,5 +1,4 @@
 #include "core/application.h"
-#include "utils/assert.h"
 #include "utils/log.h"
 
 int main()

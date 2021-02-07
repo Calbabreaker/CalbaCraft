@@ -9,8 +9,7 @@ add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "ccph.h")
 
-set_project_warnings(${PROJECT_NAME})
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
+set_project_flags(${PROJECT_NAME})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
 target_link_libraries(${PROJECT_NAME} PRIVATE glm)
