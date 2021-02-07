@@ -68,6 +68,11 @@ void Shader::setFloat1(const std::string_view name, float value)
     glUniform1f(getUniformLocation(name), value);
 }
 
+void Shader::setFloat4(const std::string_view name, const glm::vec4& value)
+{
+    glUniform4f(getUniformLocation(name), value.x, value.y, value.z, value.w);
+}
+
 int Shader::getUniformLocation(const std::string_view name)
 {
     if (m_uniformLocationCache.find(name) != m_uniformLocationCache.end())
@@ -76,7 +81,7 @@ int Shader::getUniformLocation(const std::string_view name)
     int location = glGetUniformLocation(m_handle, name.data());
 #ifdef CC_DEBUG
     if (location == -1)
-        CC_LOG_WARN("Uniform {0} does not apear to exist!", name);
+        CC_LOG_WARN("Uniform '{0}' does not apear to exist!", name);
 #endif
 
     m_uniformLocationCache[name] = location;

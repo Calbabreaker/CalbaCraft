@@ -1,3 +1,5 @@
+#include <filesystem>
+
 #include "files.h"
 
 std::string loadFileContents(const std::string_view filepath)

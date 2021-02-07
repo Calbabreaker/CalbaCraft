@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glm/glm.hpp>
+
 #include <string_view>
 #include <unordered_map>
 
@@ -12,6 +14,7 @@ public:
     void bind() const;
 
     void setFloat1(const std::string_view name, float value);
+    void setFloat4(const std::string_view name, const glm::vec4& value);
 
 private:
     int getUniformLocation(const std::string_view name);
