@@ -2,10 +2,12 @@
 
 #include "application.h"
 #include "renderer/shader.h"
+#include "utils/misc.h"
 
 Application::Application()
 {
     m_window = std::make_unique<Window>();
+    m_window->setEventCallback(CC_BIND_FUNC(Application::onEvent));
 }
 
 Application::~Application()
@@ -61,4 +63,15 @@ void Application::run()
 
         m_window->onUpdate();
     }
+}
+
+void Application::onEvent(const Event& event)
+{
+    EventDispatcher dispatcher(event);
+    dispatcher.dispatch<WindowClosedEvent>(CC_BIND_FUNC(Application::onWindowClosedEvent));
+}
+
+void Application::onWindowClosedEvent(const WindowClosedEvent&)
+{
+    m_running = false;
 }

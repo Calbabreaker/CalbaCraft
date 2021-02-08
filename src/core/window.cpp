@@ -22,7 +22,7 @@ static void OpenGLMessageCallback(unsigned /*source*/, unsigned /*type*/, unsign
     CC_ASSERT_MSG(false, "Unknown severity level!");
 }
 
-Window::Window(uint32_t width, uint32_t height, const std::string& title)
+Window::Window(uint32_t width, uint32_t height, std::string_view title)
 {
     m_data.width = width;
     m_data.height = height;
@@ -48,11 +48,12 @@ Window::Window(uint32_t width, uint32_t height, const std::string& title)
 #endif
 
         // create window
-        m_window = glfwCreateWindow(static_cast<int>(m_data.width), static_cast<int>(m_data.height),
-                                    m_data.title.c_str(), nullptr, nullptr);
-        CC_ASSERT_MSG(m_window, "Could not create window!");
+        m_context =
+            glfwCreateWindow(static_cast<int>(m_data.width), static_cast<int>(m_data.height),
+                             m_data.title.data(), nullptr, nullptr);
+        CC_ASSERT_MSG(m_context, "Could not create window!");
 
-        glfwMakeContextCurrent(m_window);
+        glfwMakeContextCurrent(m_context);
         glfwSwapInterval(1);
     }
 
@@ -79,12 +80,26 @@ Window::Window(uint32_t width, uint32_t height, const std::string& title)
 
 Window::~Window()
 {
-    glfwDestroyWindow(m_window);
+    glfwDestroyWindow(m_context);
     glfwTerminate();
 }
 
 void Window::onUpdate()
 {
     glfwPollEvents();
-    glfwSwapBuffers(m_window);
+    glfwSwapBuffers(m_context);
+}
+
+void Window::setEventCallback(const EventCallbackFunc& func)
+{
+    m_data.eventCallback = func;
+
+    glfwSetWindowUserPointer(m_context, &m_data);
+
+    glfwSetWindowCloseCallback(m_context, [](GLFWwindow* context) {
+        WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(context));
+
+        WindowClosedEvent event;
+        data.eventCallback(event);
+    });
 }
