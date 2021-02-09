@@ -82,8 +82,6 @@ static inline void CC_DEBUGBREAK(void)
         #endif
     #endif
 
-    // CC_ASSERT will only have the expression, while CC_ASSERT_MSG will have
-    // both the expression and a message.
     #define CC_INTERNAL_ASSERT_IMPL(expr, ...)                                                     \
         if (!(expr))                                                                               \
         CC_LOG_ERROR(__VA_ARGS__), CC_DEBUGBREAK()
@@ -99,3 +97,8 @@ static inline void CC_DEBUGBREAK(void)
     #define CC_ASSERT(expr)
     #define CC_DEBUGBREAK()
 #endif
+
+// this assert will not be removed from release builds
+#define CC_ASSERT_RELEASE(expr, msg, ...)                                                          \
+    if (!(expr))                                                                                   \
+    CC_LOG_ERROR("ERROR: " msg, ##__VA_ARGS__), exit(-1)

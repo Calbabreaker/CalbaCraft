@@ -22,9 +22,11 @@ static uint32_t compileShader(GLenum type, const std::string& source)
     glShaderSource(shaderID, 1, &cSource, nullptr);
     glCompileShader(shaderID);
 
+#if CC_DEBUG
     int isCompiled = 0;
     glGetShaderiv(shaderID, GL_COMPILE_STATUS, &isCompiled);
     CC_ASSERT_MSG(isCompiled, "Failed to compile {0} shader!", getShaderName(type));
+#endif
     return shaderID;
 }
 
@@ -34,9 +36,11 @@ static void linkProgram(uint32_t program, std::array<uint32_t, 2> shaders)
         glAttachShader(program, shader);
 
     glLinkProgram(program);
+#if CC_DEBUG
     int isLinked = 0;
     glGetProgramiv(program, GL_LINK_STATUS, &isLinked);
     CC_ASSERT_MSG(isLinked, "Failed to link program!");
+#endif
 
     for (uint32_t shader : shaders)
     {

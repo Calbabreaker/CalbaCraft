@@ -5,6 +5,7 @@
 static void GLFWErrorCallback(int error, const char* description)
 {
     CC_LOG_ERROR("GLFW Error ({0}): {1}", error, description);
+    CC_ASSERT_RELEASE(error != GLFW_VERSION_UNAVAILABLE, "OpenGL version must be at least 4.5!");
 }
 
 static void OpenGLMessageCallback(unsigned /*source*/, unsigned /*type*/, unsigned /*id*/,
@@ -28,7 +29,9 @@ Window::Window(uint32_t width, uint32_t height, std::string_view title)
     m_data.height = height;
     m_data.title = title;
 
+#ifdef CC_DEBUG
     CC_LOG_INFO("Creating window: {0} ({1}px by {2}px)", m_data.title, m_data.width, m_data.height);
+#endif
 
     {
         // initialize glfw
@@ -51,7 +54,7 @@ Window::Window(uint32_t width, uint32_t height, std::string_view title)
         m_context =
             glfwCreateWindow(static_cast<int>(m_data.width), static_cast<int>(m_data.height),
                              m_data.title.data(), nullptr, nullptr);
-        CC_ASSERT_MSG(m_context, "Could not create window!");
+        CC_ASSERT_RELEASE(m_context, "Could not create window!");
 
         glfwMakeContextCurrent(m_context);
         glfwSwapInterval(1);

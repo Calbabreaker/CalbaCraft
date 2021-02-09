@@ -5,7 +5,7 @@
 std::string loadFileContents(const std::string_view filepath)
 {
     std::ifstream inFile(filepath.data(), std::ios::in | std::ios::binary | std::ios::ate);
-    CC_ASSERT_MSG(inFile.is_open(), "Could not open file {0}!", filepath);
+    CC_ASSERT_RELEASE(inFile.is_open(), "Could not open file {0}!", filepath);
 
     std::string contents;
     inFile.seekg(0, std::ios::end);
