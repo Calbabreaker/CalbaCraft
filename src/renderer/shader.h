@@ -15,6 +15,7 @@ public:
 
     void setFloat1(const std::string_view name, float value);
     void setFloat4(const std::string_view name, const glm::vec4& value);
+    void setMatrix4(const std::string_view name, const glm::mat4& value);
 
 private:
     int getUniformLocation(const std::string_view name);

@@ -99,6 +99,7 @@ static inline void CC_DEBUGBREAK(void)
 #endif
 
 // this assert will not be removed from release builds
+// TODO: make this use a popup error message box
 #define CC_ASSERT_RELEASE(expr, msg, ...)                                                          \
     if (!(expr))                                                                                   \
     CC_LOG_ERROR("ERROR: " msg, ##__VA_ARGS__), exit(-1)
