@@ -3,9 +3,11 @@
 #include <glm/gtx/io.hpp>
 
 #include "application.h"
+#include "renderer/camera.h"
 #include "renderer/shader.h"
 #include "renderer/vertex_array.h"
 #include "utils/misc.h"
+#include "world/player.h"
 
 Application::Application()
 {
@@ -21,17 +23,13 @@ void Application::run()
 {
     m_running = true;
 
+    Player player;
+    Camera camera;
+    camera.setViewportSize(m_window->getWidth(), m_window->getHeight());
+
     Shader shader("./shaders/test_vert.glsl", "./shaders/test_frag.glsl");
     shader.bind();
     shader.setFloat4("u_color", { 1.0f, 0.0f, 1.0f, 1.0f });
-
-    glm::vec3 position = { 0.0f, 0.0f, 10.0f };
-    glm::vec3 front = { 0.0f, 0.0f, -1.0f };
-    glm::vec3 up = { 0.0f, 1.0f, 0.0f };
-
-    float width = static_cast<float>(m_window->getWidth());
-    float height = static_cast<float>(m_window->getHeight());
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), width / height, 0.01f, 1000.0f);
 
     // clang-format off
     std::vector<float> vertices = {
@@ -57,10 +55,10 @@ void Application::run()
         glClearColor(0.0f, 0.83f, 0.87f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glm::mat4 view = glm::lookAt(position, position + front, up);
-        glm::mat4 viewProjection = projection * view;
-        shader.setMatrix4("u_viewProjection", viewProjection);
-        position.z -= 0.01f;
+        player.position.z -= 0.01f;
+        camera.update(player);
+
+        shader.setMatrix4("u_viewProjection", camera.getViewProjection());
 
         vertexArray.draw();
 
