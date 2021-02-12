@@ -20,6 +20,7 @@ public:
 
     uint32_t getWidth() const { return m_data.width; }
     uint32_t getHeight() const { return m_data.height; }
+    GLFWwindow* getContext() const { return m_context; }
 
     void setEventCallback(const EventCallbackFunc& func);
 

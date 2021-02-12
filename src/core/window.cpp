@@ -105,4 +105,16 @@ void Window::setEventCallback(const EventCallbackFunc& func)
         WindowClosedEvent event;
         data.eventCallback(event);
     });
+
+    glfwSetCursorPosCallback(m_context, [](GLFWwindow* context, double xPos, double yPos) {
+        WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(context));
+
+        glm::vec2 position = { static_cast<float>(xPos), static_cast<float>(yPos) };
+        static glm::vec2 lastMousePos = position;
+        glm::vec2 offset = position - lastMousePos;
+        lastMousePos = position;
+
+        MouseMovedEvent event(offset);
+        data.eventCallback(event);
+    });
 }

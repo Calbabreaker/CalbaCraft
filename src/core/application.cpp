@@ -9,10 +9,18 @@
 #include "utils/misc.h"
 #include "world/player.h"
 
+Application* Application::s_instance = nullptr;
+
 Application::Application()
 {
+    CC_ASSERT_MSG(s_instance == nullptr, "There is already an instance of Application!");
+    s_instance = this;
+
     m_window = std::make_unique<Window>();
     m_window->setEventCallback(CC_BIND_FUNC(Application::onEvent));
+
+    m_camera.setViewportSize(m_window->getWidth(), m_window->getHeight());
+    m_player.position = { 0.0f, 0.0f, -1.0f };
 }
 
 Application::~Application()
@@ -22,10 +30,6 @@ Application::~Application()
 void Application::run()
 {
     m_running = true;
-
-    Player player;
-    Camera camera;
-    camera.setViewportSize(m_window->getWidth(), m_window->getHeight());
 
     Shader shader("./shaders/test_vert.glsl", "./shaders/test_frag.glsl");
     shader.bind();
@@ -52,13 +56,17 @@ void Application::run()
 
     while (m_running)
     {
+        float now = static_cast<float>(glfwGetTime());
+        float delta = now - m_lastFrameTime;
+        m_lastFrameTime = now;
+
+        m_player.update(delta);
+
         glClearColor(0.0f, 0.83f, 0.87f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        player.position.z -= 0.01f;
-        camera.update(player);
-
-        shader.setMatrix4("u_viewProjection", camera.getViewProjection());
+        m_camera.update(m_player);
+        shader.setMatrix4("u_viewProjection", m_camera.getViewProjection());
 
         vertexArray.draw();
 
@@ -70,9 +78,15 @@ void Application::onEvent(const Event& event)
 {
     EventDispatcher dispatcher(event);
     dispatcher.dispatch<WindowClosedEvent>(CC_BIND_FUNC(Application::onWindowClosedEvent));
+    dispatcher.dispatch<MouseMovedEvent>(CC_BIND_FUNC(Application::onMouseMovedEvent));
 }
 
 void Application::onWindowClosedEvent(const WindowClosedEvent&)
 {
     m_running = false;
+}
+
+void Application::onMouseMovedEvent(const MouseMovedEvent& event)
+{
+    m_player.onMouseMoved(event.getOffset());
 }

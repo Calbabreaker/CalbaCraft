@@ -1,9 +1,15 @@
+#pragma once
+
+#include <glm/glm.hpp>
+
 // clang-format off
 enum class EventType
 {
     None = 0,
-    WindowClosed
+    WindowClosed,
+    MouseMoved
 };
+// clang-format on
 
 struct Event
 {
@@ -27,12 +33,23 @@ private:
     const Event& m_event;
 };
 
-#define MAKE_EVENT_CLASS_TYPE(type)                                                                                    \
-    static constexpr EventType getStaticType() { return EventType::type; }                                                       \
-    EventType getEventType() const override { return getStaticType(); } 
+#define MAKE_EVENT_CLASS_TYPE(type)                                                                \
+    static constexpr EventType getStaticType() { return EventType::type; }                         \
+    EventType getEventType() const override { return getStaticType(); }
 
-// window events
 struct WindowClosedEvent : public Event
 {
     MAKE_EVENT_CLASS_TYPE(WindowClosed)
+};
+
+struct MouseMovedEvent : public Event
+{
+    MouseMovedEvent(const glm::vec2& offset) : m_offset(offset) {}
+
+    const glm::vec2& getOffset() const { return m_offset; }
+
+    MAKE_EVENT_CLASS_TYPE(MouseMoved)
+
+private:
+    glm::vec2 m_offset;
 };

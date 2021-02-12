@@ -13,7 +13,8 @@ void Camera::update(const Entity& entity)
     direction.z = glm::sin(yaw) * glm::cos(pitch);
     glm::vec3 front = glm::normalize(direction);
 
-    glm::mat4 view = glm::lookAt(entity.position, entity.position - front, m_up);
+    constexpr glm::vec3 up = { 0.0f, 1.0f, 0.0f };
+    glm::mat4 view = glm::lookAt(entity.position, entity.position + front, up);
     m_viewProjection = getProjection() * view;
 }
 
