@@ -34,7 +34,7 @@ void Player::onUpdate(float)
 
 void Player::onMouseMoved(const glm::vec2& offset)
 {
-    constexpr float sensitivity = 0.2f;
+    constexpr float sensitivity = 0.1f;
     rotation.x += offset.x * sensitivity;
     rotation.y = glm::clamp(rotation.y - offset.y * sensitivity, -89.0f, 89.0f);
 }

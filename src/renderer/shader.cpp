@@ -67,6 +67,10 @@ void Shader::bind() const
 {
     glUseProgram(m_handle);
 }
+void Shader::setInt1(const std::string_view name, int value)
+{
+    glUniform1i(getUniformLocation(name), value);
+}
 
 void Shader::setFloat1(const std::string_view name, float value)
 {

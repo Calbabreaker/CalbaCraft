@@ -2,8 +2,7 @@
 
 # builds and run CalbaCraft with argument release or default debug
 
-SCRIPT_PATH=$(dirname $0)
-pushd $SCRIPT_PATH/../ > /dev/null
+pushd $(dirname $0)/.. > /dev/null
 
 BUILD_TARGET=$1
 if [ ! "$1" = "release" ]; then

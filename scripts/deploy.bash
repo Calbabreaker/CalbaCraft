@@ -2,11 +2,10 @@
 
 # package executable and assets into CalbaCraft directory
 
-SCRIPT_PATH=$(dirname $0)
-pushd $SCRIPT_PATH/../ > /dev/null
+pushd $(dirname $0)/.. > /dev/null
 
 # build release first
-bash scripts/build.bash release|| exit -1
+bash scripts/build.bash release || exit -1
 
 mkdir -p CalbaCraft
 cp -f build/release/bin/CalbaCraft CalbaCraft/

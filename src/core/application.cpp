@@ -5,6 +5,7 @@
 #include "application.h"
 #include "renderer/camera.h"
 #include "renderer/shader.h"
+#include "renderer/texture.h"
 #include "renderer/vertex_array.h"
 #include "utils/misc.h"
 #include "world/player.h"
@@ -20,7 +21,7 @@ Application::Application()
     m_window->setEventCallback(CC_BIND_FUNC(Application::onEvent));
 
     m_camera.setViewportSize(m_window->getWidth(), m_window->getHeight());
-    m_player.position = { 0.0f, 0.0f, -1.0f };
+    m_player.position = { 0.0f, 0.0f, 1.0f };
 
     m_window->setMouseLocked(true);
 }
@@ -33,16 +34,26 @@ void Application::run()
 {
     m_running = true;
 
-    Shader shader("./shaders/test_vert.glsl", "./shaders/test_frag.glsl");
+    Shader shader("shaders/test_vert.glsl", "shaders/test_frag.glsl");
     shader.bind();
-    shader.setFloat4("u_color", { 1.0f, 0.0f, 1.0f, 1.0f });
+    shader.setInt1("u_texture", 0);
+
+    Texture texture("textures/blocks.png");
+    texture.bind(0);
 
     // clang-format off
-    std::vector<float> vertices = {
+    std::vector<float> positions = {
         -0.5f,  0.5f, 0.0f,
          0.5f,  0.5f, 0.0f,
          0.5f, -0.5f, 0.0f,
         -0.5f, -0.5f, 0.0f
+    };
+
+    std::vector<float> texCoords = {
+        0.0f, 0.0f,
+        1.0f, 0.0f,
+        1.0f, 1.0f,
+        0.0f, 1.0f
     };
 
     std::vector<uint32_t> indices = {
@@ -53,7 +64,8 @@ void Application::run()
 
     VertexArray vertexArray;
     vertexArray.bind();
-    vertexArray.addVertexBuffer(3, vertices);
+    vertexArray.addVertexBuffer(3, positions);
+    vertexArray.addVertexBuffer(2, texCoords);
     vertexArray.setIndexBuffer(indices);
 
     while (m_running)

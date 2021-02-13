@@ -5,6 +5,7 @@ add_executable(${PROJECT_NAME}
 
     renderer/camera.cpp
     renderer/shader.cpp
+    renderer/texture.cpp
     renderer/vertex_array.cpp
 
     utils/files.cpp
@@ -22,6 +23,7 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE "ccph.h")
 
 set_project_flags(${PROJECT_NAME})
 
+message(STATUS ${CONAN_LIBS})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIBS})
 target_link_libraries(${PROJECT_NAME} PRIVATE stdc++fs)
 
