@@ -8,9 +8,14 @@ static void GLFWErrorCallback(int error, const char* description)
     CC_ASSERT_RELEASE(error != GLFW_VERSION_UNAVAILABLE, "OpenGL version must be at least 4.5!");
 }
 
-static void OpenGLMessageCallback(unsigned /*source*/, unsigned /*type*/, unsigned /*id*/,
-                                  unsigned severity, int /*length*/, const char* message,
-                                  const void* /*userParam*/)
+static void OpenGLMessageCallback(
+    unsigned /*source*/,
+    unsigned /*type*/,
+    unsigned /*id*/,
+    unsigned severity,
+    int /*length*/,
+    const char* message,
+    const void* /*userParam*/)
 {
     switch (severity)
     {
@@ -51,9 +56,12 @@ Window::Window(uint32_t width, uint32_t height, std::string_view title)
 #endif
 
         // create window
-        m_context =
-            glfwCreateWindow(static_cast<int>(m_data.width), static_cast<int>(m_data.height),
-                             m_data.title.data(), nullptr, nullptr);
+        m_context = glfwCreateWindow(
+            static_cast<int>(m_data.width),
+            static_cast<int>(m_data.height),
+            m_data.title.data(),
+            nullptr,
+            nullptr);
         CC_ASSERT_RELEASE(m_context, "Could not create window!");
 
         glfwMakeContextCurrent(m_context);
@@ -75,8 +83,8 @@ Window::Window(uint32_t width, uint32_t height, std::string_view title)
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
         glDebugMessageCallback(OpenGLMessageCallback, nullptr);
 
-        glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0,
-                              nullptr, GL_FALSE);
+        glDebugMessageControl(
+            GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
 #endif
     }
 }
@@ -106,15 +114,47 @@ void Window::setEventCallback(const EventCallbackFunc& func)
         data.eventCallback(event);
     });
 
+    glfwSetWindowSizeCallback(m_context, [](GLFWwindow* context, int width, int heigth) {
+        WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(context));
+
+        WindowResizedEvent event(static_cast<uint32_t>(width), static_cast<uint32_t>(heigth));
+        data.eventCallback(event);
+    });
+
     glfwSetCursorPosCallback(m_context, [](GLFWwindow* context, double xPos, double yPos) {
         WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(context));
 
         glm::vec2 position = { static_cast<float>(xPos), static_cast<float>(yPos) };
-        static glm::vec2 lastMousePos = position;
-        glm::vec2 offset = position - lastMousePos;
-        lastMousePos = position;
+        glm::vec2 offset = position - data.lastMousePos;
+        data.lastMousePos = position;
 
         MouseMovedEvent event(offset);
         data.eventCallback(event);
     });
+
+    glfwSetKeyCallback(
+        m_context, [](GLFWwindow* context, int key, int /*scancode*/, int action, int /*mods*/) {
+            WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(context));
+
+            switch (action)
+            {
+            case GLFW_PRESS:
+            {
+                KeyPressedEvent event(key);
+                data.eventCallback(event);
+                break;
+            }
+            }
+        });
+}
+
+void Window::setMouseLocked(bool isLocked)
+{
+    m_isMouseLocked = isLocked;
+    glfwSetInputMode(m_context, GLFW_CURSOR, isLocked ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
+
+    // recenters cursor
+    glm::vec2 newCursorPos = { isLocked ? 0 : m_data.width / 2, isLocked ? 0 : m_data.height / 2 };
+    glfwSetCursorPos(m_context, newCursorPos.x, newCursorPos.y);
+    m_data.lastMousePos = newCursorPos;
 }

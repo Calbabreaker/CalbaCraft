@@ -6,7 +6,8 @@
 enum class EventType
 {
     None = 0,
-    WindowClosed,
+    WindowClosed, WindowResized,
+    KeyPressed,
     MouseMoved
 };
 // clang-format on
@@ -42,14 +43,30 @@ struct WindowClosedEvent : public Event
     MAKE_EVENT_CLASS_TYPE(WindowClosed)
 };
 
+struct WindowResizedEvent : public Event
+{
+    WindowResizedEvent(uint32_t p_width, uint32_t p_heigth) : width(p_width), heigth(p_heigth) {}
+
+    MAKE_EVENT_CLASS_TYPE(WindowResized)
+
+    const uint32_t width;
+    const uint32_t heigth;
+};
+
+struct KeyPressedEvent : public Event
+{
+    KeyPressedEvent(int p_key) : key(p_key) {}
+
+    MAKE_EVENT_CLASS_TYPE(KeyPressed)
+
+    const int key;
+};
+
 struct MouseMovedEvent : public Event
 {
-    MouseMovedEvent(const glm::vec2& offset) : m_offset(offset) {}
-
-    const glm::vec2& getOffset() const { return m_offset; }
+    MouseMovedEvent(const glm::vec2& p_offset) : offset(p_offset) {}
 
     MAKE_EVENT_CLASS_TYPE(MouseMoved)
 
-private:
-    glm::vec2 m_offset;
+    const glm::vec2 offset;
 };

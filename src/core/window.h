@@ -12,8 +12,8 @@ class Window
 public:
     using EventCallbackFunc = std::function<void(const Event&)>;
 
-    Window(uint32_t width = 1280, uint32_t height = 720,
-           const std::string_view title = "CalbaCraft");
+    Window(
+        uint32_t width = 1280, uint32_t height = 720, const std::string_view title = "CalbaCraft");
     ~Window();
 
     void onUpdate();
@@ -24,6 +24,9 @@ public:
 
     void setEventCallback(const EventCallbackFunc& func);
 
+    void setMouseLocked(bool isLocked);
+    bool isMouseLocked() const { return m_isMouseLocked; }
+
 private:
     GLFWwindow* m_context;
 
@@ -32,7 +35,11 @@ private:
         uint32_t width, height;
         std::string_view title;
         EventCallbackFunc eventCallback;
+
+        glm::vec2 lastMousePos = { 0.0f, 0.0f };
     };
 
     WindowData m_data;
+
+    bool m_isMouseLocked = false;
 };

@@ -20,6 +20,8 @@ public:
 private:
     void onEvent(const Event& event);
     void onWindowClosedEvent(const WindowClosedEvent& event);
+    void onWindowResizedEvent(const WindowResizedEvent& event);
+    void onKeyPressedEvent(const KeyPressedEvent& event);
     void onMouseMovedEvent(const MouseMovedEvent& event);
 
 private:

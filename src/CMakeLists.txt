@@ -1,5 +1,21 @@
-file(GLOB_RECURSE SOURCES *.cpp *.h)
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME} 
+    core/application.cpp
+    core/input.cpp
+    core/window.cpp
+
+    renderer/camera.cpp
+    renderer/shader.cpp
+    renderer/vertex_array.cpp
+
+    utils/files.cpp
+    utils/log.cpp
+
+    world/entity.cpp
+    world/player.cpp
+
+    main.cpp
+)
+
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "ccph.h")

@@ -1,9 +1,9 @@
 Language: Cpp
+IndentWidth: 4
+ColumnLimit: 100
 
 PointerAlignment: Left
-IndentWidth: 4
 IndentPPDirectives: BeforeHash 
-ColumnLimit: 100
 AccessModifierOffset: -4
 FixNamespaceComments: true
 NamespaceIndentation: All 
@@ -11,6 +11,9 @@ AlwaysBreakTemplateDeclarations: true
 AllowShortFunctionsOnASingleLine: InlineOnly
 AllowShortCaseLabelsOnASingleLine: true
 Cpp11BracedListStyle: false
+AlignAfterOpenBracket: AlwaysBreak
+BinPackArguments: false
+BinPackParameters: false
 
 PenaltyReturnTypeOnItsOwnLine: 999999
 

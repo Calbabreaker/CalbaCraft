@@ -29,8 +29,11 @@ void VertexArray::addVertexBuffer(int magnitude, const std::vector<float>& verti
     uint32_t vertexBuffer;
     glCreateBuffers(1, &vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, static_cast<uint32_t>(vertices.size() * sizeof(float)),
-                 vertices.data(), GL_STATIC_DRAW);
+    glBufferData(
+        GL_ARRAY_BUFFER,
+        static_cast<uint32_t>(vertices.size() * sizeof(float)),
+        vertices.data(),
+        GL_STATIC_DRAW);
 
     uint32_t vertexBufferCount = static_cast<uint32_t>(m_vertexBuffers.size());
     glEnableVertexAttribArray(vertexBufferCount);
@@ -42,7 +45,11 @@ void VertexArray::setIndexBuffer(const std::vector<uint32_t>& indices)
 {
     glCreateBuffers(1, &m_indexBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<uint32_t>(indices.size() * sizeof(uint32_t)),
-                 indices.data(), GL_STATIC_DRAW);
+    glBufferData(
+        GL_ELEMENT_ARRAY_BUFFER,
+        static_cast<uint32_t>(indices.size() * sizeof(uint32_t)),
+        indices.data(),
+        GL_STATIC_DRAW);
+
     m_indicesCount = static_cast<uint32_t>(indices.size());
 }

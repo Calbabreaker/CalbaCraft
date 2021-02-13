@@ -21,6 +21,8 @@ Application::Application()
 
     m_camera.setViewportSize(m_window->getWidth(), m_window->getHeight());
     m_player.position = { 0.0f, 0.0f, -1.0f };
+
+    m_window->setMouseLocked(true);
 }
 
 Application::~Application()
@@ -78,15 +80,30 @@ void Application::onEvent(const Event& event)
 {
     EventDispatcher dispatcher(event);
     dispatcher.dispatch<WindowClosedEvent>(CC_BIND_FUNC(Application::onWindowClosedEvent));
+    dispatcher.dispatch<WindowResizedEvent>(CC_BIND_FUNC(Application::onWindowResizedEvent));
+    dispatcher.dispatch<KeyPressedEvent>(CC_BIND_FUNC(Application::onKeyPressedEvent));
     dispatcher.dispatch<MouseMovedEvent>(CC_BIND_FUNC(Application::onMouseMovedEvent));
 }
 
-void Application::onWindowClosedEvent(const WindowClosedEvent&)
+void Application::onWindowClosedEvent(const WindowClosedEvent& /*event*/)
 {
     m_running = false;
 }
 
+void Application::onWindowResizedEvent(const WindowResizedEvent& event)
+{
+    glViewport(0, 0, static_cast<int>(event.width), static_cast<int>(event.heigth));
+    m_camera.setViewportSize(event.width, event.heigth);
+}
+
+void Application::onKeyPressedEvent(const KeyPressedEvent& event)
+{
+    if (event.key == GLFW_KEY_ESCAPE)
+        m_window->setMouseLocked(!m_window->isMouseLocked());
+}
+
 void Application::onMouseMovedEvent(const MouseMovedEvent& event)
 {
-    m_player.onMouseMoved(event.getOffset());
+    if (m_window->isMouseLocked())
+        m_player.onMouseMoved(event.offset);
 }
