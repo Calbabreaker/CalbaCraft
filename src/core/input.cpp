@@ -5,7 +5,7 @@ namespace Input {
 
     bool isKeyPressed(int key)
     {
-        GLFWwindow* context = Application::get().getWindow().getContext();
+        GLFWwindow* context = Application::get().getWindow().getHandle();
 
         int state = glfwGetKey(context, key);
         return state == GLFW_PRESS || state == GLFW_REPEAT;
@@ -13,7 +13,7 @@ namespace Input {
 
     bool isMouseButtonPressed(int button)
     {
-        GLFWwindow* context = Application::get().getWindow().getContext();
+        GLFWwindow* context = Application::get().getWindow().getHandle();
 
         int state = glfwGetMouseButton(context, button);
         return state == GLFW_PRESS;
@@ -21,7 +21,7 @@ namespace Input {
 
     glm::vec2 getMousePosition()
     {
-        GLFWwindow* context = Application::get().getWindow().getContext();
+        GLFWwindow* context = Application::get().getWindow().getHandle();
 
         double xPos, yPos;
         glfwGetCursorPos(context, &xPos, &yPos);

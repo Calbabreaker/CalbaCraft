@@ -19,13 +19,12 @@ static void OpenGLMessageCallback(
 {
     switch (severity)
     {
-    case GL_DEBUG_SEVERITY_LOW: CC_LOG_INFO("OpenGL Info: {0}", message); return;
-    case GL_DEBUG_SEVERITY_MEDIUM: CC_LOG_WARN("OpenGL Warn: {0}", message); return;
-    case GL_DEBUG_SEVERITY_HIGH: CC_LOG_ERROR("OpenGL Error: {0}", message); return;
-    case GL_DEBUG_SEVERITY_NOTIFICATION: CC_LOG_TRACE("OpenGL Trace: {0}", message); return;
+    case GL_DEBUG_SEVERITY_LOW: CC_LOG_INFO("OpenGL Info: {0}", message); break;
+    case GL_DEBUG_SEVERITY_MEDIUM: CC_LOG_WARN("OpenGL Warn: {0}", message); break;
+    case GL_DEBUG_SEVERITY_HIGH: CC_LOG_ERROR("OpenGL Error: {0}", message); break;
+    case GL_DEBUG_SEVERITY_NOTIFICATION: CC_LOG_TRACE("OpenGL Trace: {0}", message); break;
+    default: CC_ASSERT_MSG(false, "Unknown severity level!"); break;
     }
-
-    CC_ASSERT_MSG(false, "Unknown severity level!");
 }
 
 Window::Window(uint32_t width, uint32_t height, std::string_view title)
@@ -56,15 +55,15 @@ Window::Window(uint32_t width, uint32_t height, std::string_view title)
 #endif
 
         // create window
-        m_context = glfwCreateWindow(
+        m_handle = glfwCreateWindow(
             static_cast<int>(m_data.width),
             static_cast<int>(m_data.height),
             m_data.title.data(),
             nullptr,
             nullptr);
-        CC_ASSERT_RELEASE(m_context, "Could not create window!");
+        CC_ASSERT_RELEASE(m_handle, "Could not create window!");
 
-        glfwMakeContextCurrent(m_context);
+        glfwMakeContextCurrent(m_handle);
         glfwSwapInterval(1);
     }
 
@@ -91,38 +90,38 @@ Window::Window(uint32_t width, uint32_t height, std::string_view title)
 
 Window::~Window()
 {
-    glfwDestroyWindow(m_context);
+    glfwDestroyWindow(m_handle);
     glfwTerminate();
 }
 
 void Window::onUpdate()
 {
     glfwPollEvents();
-    glfwSwapBuffers(m_context);
+    glfwSwapBuffers(m_handle);
 }
 
 void Window::setEventCallback(const EventCallbackFunc& func)
 {
     m_data.eventCallback = func;
 
-    glfwSetWindowUserPointer(m_context, &m_data);
+    glfwSetWindowUserPointer(m_handle, &m_data);
 
-    glfwSetWindowCloseCallback(m_context, [](GLFWwindow* context) {
-        WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(context));
+    glfwSetWindowCloseCallback(m_handle, [](GLFWwindow* handle) {
+        WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(handle));
 
         WindowClosedEvent event;
         data.eventCallback(event);
     });
 
-    glfwSetWindowSizeCallback(m_context, [](GLFWwindow* context, int width, int heigth) {
-        WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(context));
+    glfwSetWindowSizeCallback(m_handle, [](GLFWwindow* handle, int width, int heigth) {
+        WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(handle));
 
         WindowResizedEvent event(static_cast<uint32_t>(width), static_cast<uint32_t>(heigth));
         data.eventCallback(event);
     });
 
-    glfwSetCursorPosCallback(m_context, [](GLFWwindow* context, double xPos, double yPos) {
-        WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(context));
+    glfwSetCursorPosCallback(m_handle, [](GLFWwindow* handle, double xPos, double yPos) {
+        WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(handle));
 
         glm::vec2 position = { static_cast<float>(xPos), static_cast<float>(yPos) };
         glm::vec2 offset = position - data.lastMousePos;
@@ -133,8 +132,8 @@ void Window::setEventCallback(const EventCallbackFunc& func)
     });
 
     glfwSetKeyCallback(
-        m_context, [](GLFWwindow* context, int key, int /*scancode*/, int action, int /*mods*/) {
-            WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(context));
+        m_handle, [](GLFWwindow* handle, int key, int /*scancode*/, int action, int /*mods*/) {
+            WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(handle));
 
             switch (action)
             {
@@ -151,10 +150,10 @@ void Window::setEventCallback(const EventCallbackFunc& func)
 void Window::setMouseLocked(bool isLocked)
 {
     m_isMouseLocked = isLocked;
-    glfwSetInputMode(m_context, GLFW_CURSOR, isLocked ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
+    glfwSetInputMode(m_handle, GLFW_CURSOR, isLocked ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
 
     // recenters cursor
     glm::vec2 newCursorPos = { isLocked ? 0 : m_data.width / 2, isLocked ? 0 : m_data.height / 2 };
-    glfwSetCursorPos(m_context, newCursorPos.x, newCursorPos.y);
+    glfwSetCursorPos(m_handle, newCursorPos.x, newCursorPos.y);
     m_data.lastMousePos = newCursorPos;
 }

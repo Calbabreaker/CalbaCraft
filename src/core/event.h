@@ -45,12 +45,12 @@ struct WindowClosedEvent : public Event
 
 struct WindowResizedEvent : public Event
 {
-    WindowResizedEvent(uint32_t p_width, uint32_t p_heigth) : width(p_width), heigth(p_heigth) {}
+    WindowResizedEvent(uint32_t p_width, uint32_t p_height) : width(p_width), height(p_height) {}
 
     MAKE_EVENT_CLASS_TYPE(WindowResized)
 
     const uint32_t width;
-    const uint32_t heigth;
+    const uint32_t height;
 };
 
 struct KeyPressedEvent : public Event

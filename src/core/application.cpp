@@ -4,9 +4,9 @@
 
 #include "application.h"
 #include "renderer/camera.h"
-#include "renderer/shader.h"
-#include "renderer/texture.h"
-#include "renderer/vertex_array.h"
+#include "renderer/gl/shader.h"
+#include "renderer/gl/texture.h"
+#include "renderer/gl/vertex_array.h"
 #include "utils/misc.h"
 #include "world/player.h"
 
@@ -39,34 +39,30 @@ void Application::run()
     shader.setInt1("u_texture", 0);
 
     Texture texture("textures/blocks.png");
-    texture.bind(0);
+    texture.bind();
 
     // clang-format off
-    std::vector<float> positions = {
-        -0.5f,  0.5f, 0.0f,
-         0.5f,  0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-        -0.5f, -0.5f, 0.0f
+    std::vector<float> vertices = {
+        -0.5f,  0.5f, 0.0f,    0.0f, 0.0f, 
+         0.5f,  0.5f, 0.0f,    1.0f, 0.0f,
+         0.5f, -0.5f, 0.0f,    1.0f, 1.0f,
+        -0.5f, -0.5f, 0.0f,    0.0f, 1.0f
     };
 
-    std::vector<float> texCoords = {
-        0.0f, 0.0f,
-        1.0f, 0.0f,
-        1.0f, 1.0f,
-        0.0f, 1.0f
-    };
-
-    std::vector<uint32_t> indices = {
-        0, 1, 2,
-        2, 3, 0
+    std::vector<uint32_t> indices = { 
+        0, 1, 2, 
+        2, 3, 0 
     };
     // clang-format on
 
     VertexArray vertexArray;
-    vertexArray.bind();
-    vertexArray.addVertexBuffer(3, positions);
-    vertexArray.addVertexBuffer(2, texCoords);
-    vertexArray.setIndexBuffer(indices);
+
+    VertexBuffer vertexBuffer(vertices.data(), vertices.size() * sizeof(float));
+    BufferElement bufferElements[] = { { GL_FLOAT, 3 }, { GL_FLOAT, 2 } };
+    vertexArray.addVertexBuffer(vertexBuffer, bufferElements, 2);
+
+    IndexBuffer indexBuffer(indices.data(), static_cast<uint32_t>(indices.size()));
+    vertexArray.setIndexBuffer(indexBuffer);
 
     while (m_running)
     {
@@ -82,7 +78,8 @@ void Application::run()
         m_camera.update(m_player);
         shader.setMatrix4("u_viewProjection", m_camera.getViewProjection());
 
-        vertexArray.draw();
+        glDrawElements(
+            GL_TRIANGLES, static_cast<int>(indexBuffer.getCount()), GL_UNSIGNED_INT, nullptr);
 
         m_window->onUpdate();
     }
@@ -104,8 +101,8 @@ void Application::onWindowClosedEvent(const WindowClosedEvent& /*event*/)
 
 void Application::onWindowResizedEvent(const WindowResizedEvent& event)
 {
-    glViewport(0, 0, static_cast<int>(event.width), static_cast<int>(event.heigth));
-    m_camera.setViewportSize(event.width, event.heigth);
+    glViewport(0, 0, static_cast<int>(event.width), static_cast<int>(event.height));
+    m_camera.setViewportSize(event.width, event.height);
 }
 
 void Application::onKeyPressedEvent(const KeyPressedEvent& event)

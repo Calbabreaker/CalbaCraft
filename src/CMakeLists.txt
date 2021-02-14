@@ -3,10 +3,11 @@ add_executable(${PROJECT_NAME}
     core/input.cpp
     core/window.cpp
 
+    renderer/gl/buffer.cpp
+    renderer/gl/shader.cpp
+    renderer/gl/texture.cpp
+    renderer/gl/vertex_array.cpp
     renderer/camera.cpp
-    renderer/shader.cpp
-    renderer/texture.cpp
-    renderer/vertex_array.cpp
 
     utils/files.cpp
     utils/log.cpp
@@ -23,7 +24,6 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE "ccph.h")
 
 set_project_flags(${PROJECT_NAME})
 
-message(STATUS ${CONAN_LIBS})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIBS})
 target_link_libraries(${PROJECT_NAME} PRIVATE stdc++fs)
 

@@ -6,7 +6,7 @@ public:
     Texture(const std::string_view filepath);
     ~Texture();
 
-    void bind(uint32_t slot);
+    void bind(uint32_t slot = 0);
 
 private:
     uint32_t m_handle;
