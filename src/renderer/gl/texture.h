@@ -1,14 +1,31 @@
 #pragma once
 
+#include <glad/glad.h>
+#include <glm/glm.hpp>
+#include <string_view>
+
 class Texture
 {
 public:
     Texture(const std::string_view filepath);
-    ~Texture();
+    virtual ~Texture();
 
     void bind(uint32_t slot = 0);
 
-private:
+    const glm::uvec2& getSize() const { return m_size; }
+
+protected:
     uint32_t m_handle;
-    uint32_t m_width, m_height;
+    glm::uvec2 m_size;
+};
+
+class TextureAtlas : public Texture
+{
+public:
+    TextureAtlas(const std::string_view filepath, const glm::uvec2& subTextureSize);
+
+    void getSubTextureUVs(const glm::vec2& position, glm::vec2* outMinUV, glm::vec2* outMaxUV);
+
+private:
+    glm::uvec2 m_subTextureSize;
 };

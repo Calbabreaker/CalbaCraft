@@ -10,4 +10,5 @@ void main()
 {
     color = texture(u_texture, v_texCoord);
     // color = vec4(v_texCoord, 0.0, 1.0);
+    // color = vec4(1.0, 0.0, 0.0, 1.0);
 }

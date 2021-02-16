@@ -1,6 +1,7 @@
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/io.hpp>
+#include <vector>
 
 #include "application.h"
 #include "renderer/camera.h"
@@ -38,17 +39,32 @@ void Application::run()
     shader.bind();
     shader.setInt1("u_texture", 0);
 
-    Texture texture("textures/blocks.png");
+    TextureAtlas texture("textures/blocks.png", { 16, 16 });
     texture.bind();
 
-    // clang-format off
-    std::vector<float> vertices = {
-        -0.5f,  0.5f, 0.0f,    0.0f, 0.0f, 
-         0.5f,  0.5f, 0.0f,    1.0f, 0.0f,
-         0.5f, -0.5f, 0.0f,    1.0f, 1.0f,
-        -0.5f, -0.5f, 0.0f,    0.0f, 1.0f
+    struct Vertex
+    {
+        glm::vec3 position;
+        glm::vec2 texCoord;
     };
 
+    glm::vec2 minUV, maxUV;
+    texture.getSubTextureUVs({ 0, 0 }, &minUV, &maxUV);
+    Vertex* vertices = new Vertex[4];
+
+    vertices[0].position = { 0.0f, 0.0f, 0.0f };
+    vertices[0].texCoord = { minUV.x, minUV.x };
+
+    vertices[1].position = { 1.0f, 0.0f, 0.0f };
+    vertices[1].texCoord = { maxUV.x, minUV.y };
+
+    vertices[2].position = { 1.0f, 1.0f, 0.0f };
+    vertices[2].texCoord = { maxUV.x, maxUV.y };
+
+    vertices[3].position = { 0.0f, 1.0f, 0.0f };
+    vertices[3].texCoord = { minUV.x, maxUV.y };
+
+    // clang-format off
     std::vector<uint32_t> indices = { 
         0, 1, 2, 
         2, 3, 0 
@@ -57,7 +73,7 @@ void Application::run()
 
     VertexArray vertexArray;
 
-    VertexBuffer vertexBuffer(vertices.data(), vertices.size() * sizeof(float));
+    VertexBuffer vertexBuffer(vertices, 5 * 4 * sizeof(float));
     BufferElement bufferElements[] = { { GL_FLOAT, 3 }, { GL_FLOAT, 2 } };
     vertexArray.addVertexBuffer(vertexBuffer, bufferElements, 2);
 
