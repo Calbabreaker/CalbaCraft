@@ -14,6 +14,7 @@ add_executable(${PROJECT_NAME}
 
     world/entity.cpp
     world/player.cpp
+    world/world.cpp
 
     main.cpp
 )

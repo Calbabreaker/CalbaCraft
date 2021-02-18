@@ -5,6 +5,7 @@
 #include "renderer/camera.h"
 #include "window.h"
 #include "world/player.h"
+#include "world/world.h"
 
 class Application
 {
@@ -29,6 +30,7 @@ private:
     float m_lastFrameTime = 0.0f;
 
     std::unique_ptr<Window> m_window;
+    World* m_world;
     static Application* s_instance;
 
     Player m_player;

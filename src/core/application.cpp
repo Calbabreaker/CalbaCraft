@@ -21,6 +21,8 @@ Application::Application()
     m_window = std::make_unique<Window>();
     m_window->setEventCallback(CC_BIND_FUNC(Application::onEvent));
 
+    m_world = new World();
+
     m_camera.setViewportSize(m_window->getWidth(), m_window->getHeight());
     m_player.position = { 0.0f, 0.0f, 1.0f };
 
@@ -29,6 +31,7 @@ Application::Application()
 
 Application::~Application()
 {
+    delete m_world;
 }
 
 void Application::run()
@@ -73,12 +76,14 @@ void Application::run()
 
     VertexArray vertexArray;
 
-    VertexBuffer vertexBuffer(vertices, 5 * 4 * sizeof(float));
+    VertexBuffer vertexBuffer(5 * 4 * sizeof(float));
     BufferElement bufferElements[] = { { GL_FLOAT, 3 }, { GL_FLOAT, 2 } };
     vertexArray.addVertexBuffer(vertexBuffer, bufferElements, 2);
 
     IndexBuffer indexBuffer(indices.data(), static_cast<uint32_t>(indices.size()));
     vertexArray.setIndexBuffer(indexBuffer);
+
+    vertexBuffer.setData(vertices, 5 * 4 * sizeof(float));
 
     while (m_running)
     {
