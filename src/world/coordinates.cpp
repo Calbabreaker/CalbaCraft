@@ -1,6 +1,6 @@
 #include "coordinates.h"
 
-chunkpos_t globalBlockToChunkPos(const blockpos_t& blockPos)
+glm::ivec3 globalBlockToChunkPos(const glm::ivec3& blockPos)
 {
     // deals with negative
     return {
@@ -10,7 +10,7 @@ chunkpos_t globalBlockToChunkPos(const blockpos_t& blockPos)
     };
 }
 
-blockpos_t globalToLocalBlockPos(const blockpos_t& blockPos)
+glm::ivec3 globalToLocalBlockPos(const glm::ivec3& blockPos)
 {
     // deals with negative
     return { (CHUNK_SIZE + (blockPos.x % CHUNK_SIZE)) % CHUNK_SIZE,
@@ -18,14 +18,14 @@ blockpos_t globalToLocalBlockPos(const blockpos_t& blockPos)
              (CHUNK_SIZE + (blockPos.z % CHUNK_SIZE)) % CHUNK_SIZE };
 }
 
-blockpos_t localToGlobalBlockPos(const blockpos_t& blockPos, const chunkpos_t& chunkPos)
+glm::ivec3 localToGlobalBlockPos(const glm::ivec3& blockPos, const glm::ivec3& chunkPos)
 {
     return { blockPos.x + CHUNK_SIZE * chunkPos.x,
              blockPos.y + CHUNK_SIZE * chunkPos.y,
              blockPos.z + CHUNK_SIZE * chunkPos.z };
 }
 
-uint32_t localBlockPosToIndex(const blockpos_t& position)
+uint32_t localBlockPosToIndex(const glm::ivec3& blockPos)
 {
-    return position.x * CHUNK_SIZE + position.z + (position.y * CHUNK_SIZE * CHUNK_SIZE);
+    return blockPos.x * CHUNK_SIZE + blockPos.z + (blockPos.y * CHUNK_SIZE * CHUNK_SIZE);
 }

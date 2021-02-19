@@ -38,7 +38,7 @@ void Application::run()
 {
     m_running = true;
 
-    Shader shader("shaders/test_vert.glsl", "shaders/test_frag.glsl");
+    Shader shader("shaders/chunk_vert.glsl", "shaders/chunk_frag.glsl");
     shader.bind();
     shader.setInt1("u_texture", 0);
 
@@ -76,14 +76,12 @@ void Application::run()
 
     VertexArray vertexArray;
 
-    VertexBuffer vertexBuffer(5 * 4 * sizeof(float));
+    VertexBuffer vertexBuffer(vertices, 5 * 4 * sizeof(float));
     BufferElement bufferElements[] = { { GL_FLOAT, 3 }, { GL_FLOAT, 2 } };
     vertexArray.addVertexBuffer(vertexBuffer, bufferElements, 2);
 
     IndexBuffer indexBuffer(indices.data(), static_cast<uint32_t>(indices.size()));
     vertexArray.setIndexBuffer(indexBuffer);
-
-    vertexBuffer.setData(vertices, 5 * 4 * sizeof(float));
 
     while (m_running)
     {
@@ -97,7 +95,7 @@ void Application::run()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         m_camera.update(m_player);
-        shader.setMatrix4("u_viewProjection", m_camera.getViewProjection());
+        shader.setMat4("u_viewProjection", m_camera.getViewProjection());
 
         glDrawElements(
             GL_TRIANGLES, static_cast<int>(indexBuffer.getCount()), GL_UNSIGNED_INT, nullptr);

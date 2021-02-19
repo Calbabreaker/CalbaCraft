@@ -3,30 +3,27 @@
 #include <glm/glm.hpp>
 #include <unordered_map>
 
-constexpr uint32_t CHUNK_SIZE = 32;
-constexpr uint32_t CHUNK_VOLUME = 32 * 32 * 32;
-
-using chunkpos_t = glm::ivec3;
-using blockpos_t = glm::ivec3;
+constexpr int CHUNK_SIZE = 32;
+constexpr int CHUNK_VOLUME = 32 * 32 * 32;
 
 struct ChunkPositionHashKey
 {
-    std::size_t operator()(const chunkpos_t& chunkPos) const
+    std::size_t operator()(const glm::ivec3& chunkPos) const
     {
         return std::hash<int>()(chunkPos.x) ^ std::hash<int>()(chunkPos.y) ^
                std::hash<int>()(chunkPos.z);
     }
 
-    bool operator()(const chunkpos_t& a, const chunkpos_t& b) const
+    bool operator()(const glm::ivec3& a, const glm::ivec3& b) const
     {
         return a.x == b.x && a.y == b.y && a.z == b.z;
     }
 };
 
 template <typename T>
-using ChunkPositionMap = std::unordered_map<chunkpos_t, T, ChunkPositionHashKey>;
+using ChunkPositionMap = std::unordered_map<glm::ivec3, T, ChunkPositionHashKey>;
 
-chunkpos_t globalBlockToChunkPos(const blockpos_t& blockPos);
-blockpos_t globalToLocalBlockPos(const blockpos_t& blockPos);
-blockpos_t localToGlobalBlockPos(const blockpos_t& blockPos, const chunkpos_t& chunkPos);
-uint32_t localBlockPosToIndex(const blockpos_t& blockPos);
+glm::ivec3 globalBlockToChunkPos(const glm::ivec3& blockPos);
+glm::ivec3 globalToLocalBlockPos(const glm::ivec3& blockPos);
+glm::ivec3 localToGlobalBlockPos(const glm::ivec3& blockPos, const glm::ivec3& chunkPos);
+uint32_t localBlockPosToIndex(const glm::ivec3& blockPos);

@@ -82,7 +82,7 @@ void Shader::setFloat4(const std::string_view name, const glm::vec4& value)
     glUniform4f(getUniformLocation(name), value.x, value.y, value.z, value.w);
 }
 
-void Shader::setMatrix4(const std::string_view name, const glm::mat4& value)
+void Shader::setMat4(const std::string_view name, const glm::mat4& value)
 {
     glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value));
 }

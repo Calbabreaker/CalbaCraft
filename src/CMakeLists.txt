@@ -12,6 +12,8 @@ add_executable(${PROJECT_NAME}
     utils/files.cpp
     utils/log.cpp
 
+    world/chunk.cpp
+    world/coordinates.cpp
     world/entity.cpp
     world/player.cpp
     world/world.cpp

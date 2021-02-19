@@ -1,17 +1,22 @@
 #pragma once
 
-#include "renderer/gl/buffer.h"
+#include <array>
 
-class World;
+#include "block_data.h"
+#include "coordinates.h"
+#include "renderer/gl/buffer.h"
 
 class Chunk
 {
 public:
     Chunk();
 
-private:
-    VertexBuffer m_vertexBuffer;
-    IndexBuffer m_indexBuffer;
+    void setChunkPos(const glm::ivec3& chunkPos);
 
-    friend class World;
+    void setBlock(const glm::ivec3& blockPos, blockid_t id);
+
+private:
+    glm::ivec3 m_chunkPos;
+
+    std::array<blockid_t, CHUNK_VOLUME> m_blocks;
 };
