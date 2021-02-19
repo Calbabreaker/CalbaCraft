@@ -1,4 +1,5 @@
 #include "player.h"
+#include "core/config.h"
 #include "core/input.h"
 
 Player::Player()
@@ -34,7 +35,7 @@ void Player::onUpdate(float)
 
 void Player::onMouseMoved(const glm::vec2& offset)
 {
-    constexpr float sensitivity = 0.1f;
+    float sensitivity = Config::getSettings().mouseSensitivity * 0.001f;
     rotation.x += offset.x * sensitivity;
     rotation.y = glm::clamp(rotation.y - offset.y * sensitivity, -89.0f, 89.0f);
 }

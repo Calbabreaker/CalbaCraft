@@ -1,5 +1,6 @@
 add_executable(${PROJECT_NAME} 
     core/application.cpp
+    core/config.cpp
     core/input.cpp
     core/window.cpp
 
@@ -12,6 +13,7 @@ add_executable(${PROJECT_NAME}
     utils/files.cpp
     utils/log.cpp
 
+    world/chunk_mesh.cpp
     world/chunk.cpp
     world/coordinates.cpp
     world/entity.cpp

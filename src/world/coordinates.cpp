@@ -27,5 +27,6 @@ glm::ivec3 localToGlobalBlockPos(const glm::ivec3& blockPos, const glm::ivec3& c
 
 uint32_t localBlockPosToIndex(const glm::ivec3& blockPos)
 {
-    return blockPos.x * CHUNK_SIZE + blockPos.z + (blockPos.y * CHUNK_SIZE * CHUNK_SIZE);
+    return static_cast<uint32_t>(
+        blockPos.x * CHUNK_SIZE + blockPos.z + (blockPos.y * CHUNK_SIZE * CHUNK_SIZE));
 }

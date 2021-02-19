@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "application.h"
+#include "config.h"
 #include "renderer/camera.h"
 #include "renderer/gl/shader.h"
 #include "renderer/gl/texture.h"
@@ -18,12 +19,15 @@ Application::Application()
     CC_ASSERT_MSG(s_instance == nullptr, "There is already an instance of Application!");
     s_instance = this;
 
+    Config::loadSettings("config_settings.json");
+
     m_window = std::make_unique<Window>();
     m_window->setEventCallback(CC_BIND_FUNC(Application::onEvent));
 
     m_world = new World();
 
     m_camera.setViewportSize(m_window->getWidth(), m_window->getHeight());
+    m_camera.fov = glm::radians(Config::getSettings().fov);
     m_player.position = { 0.0f, 0.0f, 1.0f };
 
     m_window->setMouseLocked(true);

@@ -15,3 +15,11 @@ std::string loadFileContents(const std::string_view filepath)
     contents.assign(std::istreambuf_iterator<char>(inFile), std::istreambuf_iterator<char>());
     return contents;
 }
+
+rapidjson::Document loadJSONFile(const std::string_view filepath)
+{
+    std::string contents = loadFileContents(filepath);
+    rapidjson::Document doc;
+    doc.Parse(contents.c_str());
+    return doc;
+}
