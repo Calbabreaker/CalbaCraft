@@ -13,6 +13,7 @@ add_executable(${PROJECT_NAME}
     utils/files.cpp
     utils/log.cpp
 
+    world/block_data.cpp
     world/chunk_mesh.cpp
     world/chunk.cpp
     world/coordinates.cpp

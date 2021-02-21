@@ -10,6 +10,7 @@
 #include "renderer/gl/texture.h"
 #include "renderer/gl/vertex_array.h"
 #include "utils/misc.h"
+#include "world/block_data.h"
 #include "world/player.h"
 
 Application* Application::s_instance = nullptr;
@@ -20,6 +21,7 @@ Application::Application()
     s_instance = this;
 
     Config::loadSettings("config_settings.json");
+    BlockDatabase::loadData("data/block_data.json");
 
     m_window = std::make_unique<Window>();
     m_window->setEventCallback(CC_BIND_FUNC(Application::onEvent));
@@ -46,7 +48,7 @@ void Application::run()
     shader.bind();
     shader.setInt1("u_texture", 0);
 
-    TextureAtlas texture("textures/blocks.png", { 16, 16 });
+    TextureAtlas texture("textures/block_textures.png", { 16, 16 });
     texture.bind();
 
     struct Vertex
@@ -80,11 +82,13 @@ void Application::run()
 
     VertexArray vertexArray;
 
-    VertexBuffer vertexBuffer(vertices, 5 * 4 * sizeof(float));
+    VertexBuffer vertexBuffer;
+    vertexBuffer.setStaticData(vertices, 5 * 4 * sizeof(float));
     BufferElement bufferElements[] = { { GL_FLOAT, 3 }, { GL_FLOAT, 2 } };
     vertexArray.addVertexBuffer(vertexBuffer, bufferElements, 2);
 
-    IndexBuffer indexBuffer(indices.data(), static_cast<uint32_t>(indices.size()));
+    IndexBuffer indexBuffer;
+    indexBuffer.setIndices(indices.data(), static_cast<uint32_t>(indices.size()));
     vertexArray.setIndexBuffer(indexBuffer);
 
     while (m_running)

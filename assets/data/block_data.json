@@ -1,0 +1,9 @@
+[
+    {
+        "name": "Air"
+    },
+    {
+        "name": "Dirt",
+        "texture": [0, 0]
+    }
+]

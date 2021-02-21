@@ -13,3 +13,11 @@ void Chunk::setBlock(const glm::ivec3& blockPos, blockid_t id)
 {
     m_blocks[localBlockPosToIndex(blockPos)] = id;
 }
+
+void Chunk::rengenerateMesh()
+{
+}
+
+void Chunk::render()
+{
+}

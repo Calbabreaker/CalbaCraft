@@ -10,7 +10,9 @@ public:
     VertexArray();
     ~VertexArray();
 
-    void bind();
+    void bind() const;
+
+    void draw();
 
     // automatically calculates stride and offset
     void addVertexBuffer(
@@ -19,4 +21,5 @@ public:
 
 private:
     uint32_t m_handle;
+    uint32_t m_indicesCount;
 };

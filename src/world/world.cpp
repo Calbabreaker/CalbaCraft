@@ -2,7 +2,7 @@
 
 World::World()
     : m_chunkShader("shaders/chunk_vert.glsl", "shaders/chunk_frag.glsl"),
-      m_chunkTexture("textures/blocks.png", { 16, 16 })
+      m_chunkTexture("textures/block_textures.png", { 16, 16 })
 {
     m_chunks[{ 0, 0, 0 }] = std::make_shared<Chunk>();
 

@@ -1,10 +1,8 @@
 #include "buffer.h"
 
-VertexBuffer::VertexBuffer(const void* data, size_t size)
+VertexBuffer::VertexBuffer()
 {
     glCreateBuffers(1, &m_handle);
-    bind();
-    glBufferData(GL_ARRAY_BUFFER, static_cast<uint32_t>(size), data, GL_STATIC_DRAW);
 }
 
 VertexBuffer::VertexBuffer(size_t size)
@@ -24,21 +22,21 @@ void VertexBuffer::bind() const
     glBindBuffer(GL_ARRAY_BUFFER, m_handle);
 }
 
-void VertexBuffer::setData(const void* data, size_t size)
+void VertexBuffer::setDynamicData(const void* data, size_t size)
 {
     bind();
     glBufferSubData(GL_ARRAY_BUFFER, 0, static_cast<uint32_t>(size), data);
 }
 
-IndexBuffer::IndexBuffer(uint32_t* indices, uint32_t count) : m_count(count)
+void VertexBuffer::setStaticData(const void* data, size_t size)
+{
+    bind();
+    glBufferData(GL_ARRAY_BUFFER, static_cast<uint32_t>(size), data, GL_STATIC_DRAW);
+}
+
+IndexBuffer::IndexBuffer()
 {
     glCreateBuffers(1, &m_handle);
-    bind();
-    glBufferData(
-        GL_ELEMENT_ARRAY_BUFFER,
-        static_cast<uint32_t>(count * sizeof(uint32_t)),
-        indices,
-        GL_STATIC_DRAW);
 }
 
 IndexBuffer::~IndexBuffer()
@@ -49,6 +47,17 @@ IndexBuffer::~IndexBuffer()
 void IndexBuffer::bind() const
 {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_handle);
+}
+
+void IndexBuffer::setIndices(uint32_t* indices, uint32_t count)
+{
+    bind();
+    m_count = count;
+    glBufferData(
+        GL_ELEMENT_ARRAY_BUFFER,
+        static_cast<uint32_t>(count * sizeof(uint32_t)),
+        indices,
+        GL_STATIC_DRAW);
 }
 
 uint32_t getDataTypeSize(GLenum dataType)

@@ -5,13 +5,14 @@
 class VertexBuffer
 {
 public:
-    VertexBuffer(const void* data, size_t size);
+    VertexBuffer();
     VertexBuffer(size_t size);
     ~VertexBuffer();
 
     void bind() const;
 
-    void setData(const void* data, size_t size);
+    void setDynamicData(const void* data, size_t size);
+    void setStaticData(const void* data, size_t size);
 
 private:
     uint32_t m_handle;
@@ -20,10 +21,12 @@ private:
 class IndexBuffer
 {
 public:
-    IndexBuffer(uint32_t* indices, uint32_t count);
+    IndexBuffer();
     ~IndexBuffer();
 
     void bind() const;
+
+    void setIndices(uint32_t* indices, uint32_t count);
 
     uint32_t getCount() const { return m_count; }
 

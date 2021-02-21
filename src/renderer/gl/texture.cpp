@@ -29,7 +29,7 @@ Texture::~Texture()
     glDeleteTextures(1, &m_handle);
 }
 
-void Texture::bind(uint32_t slot)
+void Texture::bind(uint32_t slot) const
 {
     glBindTextureUnit(slot, m_handle);
 }
@@ -40,9 +40,9 @@ TextureAtlas::TextureAtlas(const std::string_view filepath, const glm::uvec2& su
 }
 
 void TextureAtlas::getSubTextureUVs(
-    const glm::vec2& position, glm::vec2* outMinUV, glm::vec2* outMaxUV)
+    const glm::ivec2& position, glm::vec2* outMinUV, glm::vec2* outMaxUV)
 {
     glm::vec2 toUVCoord = static_cast<glm::vec2>(m_subTextureSize) / static_cast<glm::vec2>(m_size);
-    *outMinUV = position * toUVCoord;
-    *outMaxUV = (position + 1.0f) * toUVCoord;
+    *outMinUV = static_cast<glm::vec2>(position) * toUVCoord;
+    *outMaxUV = static_cast<glm::vec2>(position + 1) * toUVCoord;
 }

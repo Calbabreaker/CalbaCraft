@@ -11,7 +11,7 @@ class Config
 public:
     static void loadSettings(const std::string_view filepath);
 
-    static ConfigSettings getSettings() { return s_configSettings; }
+    static const ConfigSettings& getSettings() { return s_configSettings; }
 
 private:
     static ConfigSettings s_configSettings;

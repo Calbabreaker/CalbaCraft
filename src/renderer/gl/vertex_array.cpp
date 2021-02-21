@@ -12,9 +12,14 @@ VertexArray::~VertexArray()
     glDeleteVertexArrays(1, &m_handle);
 }
 
-void VertexArray::bind()
+void VertexArray::bind() const
 {
     glBindVertexArray(m_handle);
+}
+
+void VertexArray::draw()
+{
+    glDrawElements(GL_TRIANGLES, m_indicesCount, GL_UNSIGNED_INT, nullptr);
 }
 
 void VertexArray::addVertexBuffer(
@@ -59,4 +64,5 @@ void VertexArray::setIndexBuffer(const IndexBuffer& indexBuffer)
 {
     bind();
     indexBuffer.bind();
+    m_indicesCount = indexBuffer.getCount();
 }
