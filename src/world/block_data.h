@@ -10,7 +10,7 @@ struct BlockData
 {
     blockid_t id;
     std::string_view name;
-    glm::vec2 texture;
+    glm::uvec2 texture;
 };
 
 class BlockDatabase

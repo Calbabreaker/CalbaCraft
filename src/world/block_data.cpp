@@ -1,12 +1,5 @@
-#include <glm/gtc/type_ptr.hpp>
-
 #include "block_data.h"
 #include "utils/files.h"
-
-static constexpr glm::ivec2 getVector(const rapidjson::Value::Array& vector)
-{
-    return { vector[0], vector[1] };
-}
 
 std::vector<BlockData> BlockDatabase::s_blockDatas;
 
@@ -23,7 +16,11 @@ void BlockDatabase::loadData(const std::string_view filepath)
         blockData.id = static_cast<blockid_t>(i);
         blockData.name = jsonBlock["name"].GetString();
 
-        blockData.texture = getVector(jsonBlock["texture"].GetArray());
+        if (jsonBlock.HasMember("texture"))
+            blockData.texture = { jsonBlock["texture"][0].GetUint(),
+                                  jsonBlock["texture"][1].GetUint() };
+        else
+            blockData.texture = { 0, 0 };
     }
 }
 

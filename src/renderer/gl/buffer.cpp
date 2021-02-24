@@ -49,7 +49,7 @@ void IndexBuffer::bind() const
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_handle);
 }
 
-void IndexBuffer::setIndices(uint32_t* indices, uint32_t count)
+void IndexBuffer::setIndices(const uint32_t* indices, uint32_t count)
 {
     bind();
     m_count = count;

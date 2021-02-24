@@ -9,12 +9,13 @@ add_executable(${PROJECT_NAME}
     renderer/gl/texture.cpp
     renderer/gl/vertex_array.cpp
     renderer/camera.cpp
+    renderer/chunk_mesh.cpp
+    renderer/chunk_renderer.cpp
 
     utils/files.cpp
     utils/log.cpp
 
     world/block_data.cpp
-    world/chunk_mesh.cpp
     world/chunk.cpp
     world/coordinates.cpp
     world/entity.cpp

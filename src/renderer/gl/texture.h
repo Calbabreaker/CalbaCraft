@@ -24,7 +24,7 @@ class TextureAtlas : public Texture
 public:
     TextureAtlas(const std::string_view filepath, const glm::uvec2& subTextureSize);
 
-    void getSubTextureUVs(const glm::ivec2& position, glm::vec2* outMinUV, glm::vec2* outMaxUV);
+    void getSubTextureUVs(const glm::uvec2& position, glm::vec2* outMinUV, glm::vec2* outMaxUV);
 
 private:
     glm::uvec2 m_subTextureSize;

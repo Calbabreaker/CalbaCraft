@@ -1,5 +1,5 @@
 function(set_project_flags project_name)
-    target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
+    target_compile_features(${project_name} PRIVATE cxx_std_17)
 
     set(MSVC_WARNINGS
         /W4 # Baseline reasonable warnings

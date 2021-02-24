@@ -26,7 +26,7 @@ public:
 
     void bind() const;
 
-    void setIndices(uint32_t* indices, uint32_t count);
+    void setIndices(const uint32_t* indices, uint32_t count);
 
     uint32_t getCount() const { return m_count; }
 

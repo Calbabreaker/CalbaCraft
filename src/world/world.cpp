@@ -1,13 +1,11 @@
 #include "world.h"
 
 World::World()
-    : m_chunkShader("shaders/chunk_vert.glsl", "shaders/chunk_frag.glsl"),
-      m_chunkTexture("textures/block_textures.png", { 16, 16 })
 {
-    m_chunks[{ 0, 0, 0 }] = std::make_shared<Chunk>();
+    m_chunks[{ 0, 0, 0 }] = std::make_shared<Chunk>(this, m_chunkRenderer.newChunkMesh());
 
-    m_chunkShader.bind();
-    m_chunkShader.setInt1("u_texture", 0);
+    const std::shared_ptr<Chunk>& chunk = m_chunks[{ 0, 0, 0 }];
+    chunk->getChunkMesh()->rengenerateMesh(chunk);
 }
 
 World::~World()
@@ -22,11 +20,4 @@ void World::onUpdate(float delta)
 void World::onRender()
 {
     m_camera.update(m_player);
-    m_chunkShader.bind();
-    m_chunkShader.setMat4("u_viewProjection", m_camera.getViewProjection());
-    m_chunkTexture.bind();
-
-    for (auto& iter : m_chunks)
-    {
-    }
 }

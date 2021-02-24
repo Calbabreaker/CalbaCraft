@@ -6,8 +6,7 @@
 #include "coordinates.h"
 #include "player.h"
 #include "renderer/camera.h"
-#include "renderer/gl/shader.h"
-#include "renderer/gl/texture.h"
+#include "renderer/chunk_renderer.h"
 
 class World
 {
@@ -21,9 +20,8 @@ public:
 private:
     ChunkPositionMap<std::shared_ptr<Chunk>> m_chunks;
 
-    Shader m_chunkShader;
-    TextureAtlas m_chunkTexture;
-
     Player m_player;
     Camera m_camera;
+
+    ChunkRenderer m_chunkRenderer;
 };
