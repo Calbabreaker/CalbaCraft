@@ -1,4 +1,5 @@
 {
     "fov": 60,
-    "mouseSensitivity": 100
+    "mouseSensitivity": 100,
+    "renderDistance": 1
 }

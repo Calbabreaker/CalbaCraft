@@ -4,6 +4,7 @@ struct ConfigSettings
 {
     float fov;
     float mouseSensitivity;
+    int renderDistance;
 };
 
 class Config

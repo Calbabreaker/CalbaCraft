@@ -32,7 +32,7 @@ public:
 
     void render();
 
-    void rengenerateMesh(const std::shared_ptr<Chunk>& chunk);
+    void regenerateMesh(const std::shared_ptr<Chunk>& chunk);
     void addFace(const FaceParams& params);
 
     const glm::ivec3& getChunkPos() { return m_chunkPos; }

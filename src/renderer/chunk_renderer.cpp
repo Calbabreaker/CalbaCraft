@@ -37,7 +37,7 @@ void ChunkRenderer::render(const Camera& camera)
 
     for (const std::shared_ptr<ChunkMesh>& mesh : m_chunkMeshes)
     {
-        m_chunkShader.setFloat3("u_chunkPosition", mesh->getChunkPos());
+        m_chunkShader.setFloat3("u_blockOffset", mesh->getChunkPos() * CHUNK_SIZE);
         mesh->render();
     }
 }

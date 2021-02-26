@@ -18,7 +18,7 @@ public:
     const glm::ivec3& getChunkPos() { return m_chunkPos; }
 
     void setBlock(const glm::ivec3& blockPos, blockid_t id);
-    blockid_t getBlock(const glm::ivec3& blockPos) const;
+    blockid_t getBlock(const glm::ivec3& blockPos, blockid_t notFoundReturn = 0) const;
 
     const std::shared_ptr<ChunkMesh>& getChunkMesh() const { return m_chunkMesh; }
 
