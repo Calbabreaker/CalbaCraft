@@ -21,6 +21,8 @@ void BlockDatabase::loadData(const std::string_view filepath)
                                   jsonBlock["texture"][1].GetUint() };
         else
             blockData.texture = { 0, 0 };
+
+        s_blockDatas.emplace_back(blockData);
     }
 }
 

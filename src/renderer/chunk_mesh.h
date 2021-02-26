@@ -35,8 +35,10 @@ public:
     void rengenerateMesh(const std::shared_ptr<Chunk>& chunk);
     void addFace(const FaceParams& params);
 
+    const glm::ivec3& getChunkPos() { return m_chunkPos; }
+
 public:
-    static const size_t MAX_VERTICES = CHUNK_VOLUME / 2 * 6 * 4 * sizeof(Vertex);
+    static const size_t MAX_VERTICES = CHUNK_VOLUME / 2 * 6 * 4;
     static const uint32_t MAX_INDICES_COUNT = CHUNK_VOLUME / 2 * 6 * 6;
 
 private:
@@ -47,6 +49,7 @@ private:
     Vertex* m_vertexBufferBase;
     Vertex* m_vertexBufferPtr;
     uint32_t m_indicesCount;
+    glm::ivec3 m_chunkPos;
 
     ChunkRenderer* m_chunkRenderer;
 };

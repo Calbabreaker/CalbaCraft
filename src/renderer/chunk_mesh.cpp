@@ -7,12 +7,12 @@
 // clang-format off
 // uses a direction index to index CUBE_VERTICES
 constexpr uint32_t CUBE_INDICES[] = {
-    1, 0, 3, 2, // north
-    4, 5, 6, 7, // south
-    5, 1, 2, 6, // east
-    0, 4, 7, 3, // west
+    6, 7, 4, 5, // north
+    3, 2, 1, 0, // south
+    2, 6, 5, 1, // east
+    7, 3, 0, 4, // west
     2, 3, 7, 6, // top
-    5, 4, 0, 1, // bottom
+    0, 1, 5, 4, // bottom
 };
 
 constexpr glm::vec3 CUBE_VERTICES[] = {
@@ -28,10 +28,10 @@ constexpr glm::vec3 CUBE_VERTICES[] = {
 };
 
 constexpr glm::vec2 CUBE_UVS[] = {
-    { 1.0f, 0.0f }, 
     { 0.0f, 0.0f }, 
-    { 0.0f, 1.0f }, 
-    { 1.0f, 1.0f }  
+    { 1.0f, 0.0f }, 
+    { 1.0f, 1.0f }, 
+    { 1.0f, 0.0f }  
 };
 // clang-format on
 
@@ -43,11 +43,15 @@ ChunkMesh::ChunkMesh(ChunkRenderer* chunkRenderer)
 
     m_indexBuffer.setIndices(m_chunkRenderer->getMeshIndices(), MAX_INDICES_COUNT);
     m_vertexArray.setIndexBuffer(m_indexBuffer);
+
+    m_vertexBufferBase = new Vertex[MAX_VERTICES];
 }
 
 void ChunkMesh::rengenerateMesh(const std::shared_ptr<Chunk>& chunk)
 {
     m_indicesCount = 0;
+    m_vertexBufferPtr = m_vertexBufferBase;
+    m_chunkPos = chunk->getChunkPos();
 
     for (int x = 0; x < CHUNK_SIZE; x++)
     {
@@ -70,11 +74,12 @@ void ChunkMesh::rengenerateMesh(const std::shared_ptr<Chunk>& chunk)
                         const glm::ivec3& dirVec = DIRECTION_TO_VECTOR[params.direction];
                         glm::ivec3 neighbourPos = params.blockPos + dirVec;
 
-                        m_chunkRenderer->getTexture().getSubTextureUVs(
-                            data.texture, &params.uvMin, &params.uvMax);
-
-                        if (chunk->getBlock(neighbourPos) != 0)
+                        if (chunk->getBlock(neighbourPos) == 0)
                         {
+
+                            m_chunkRenderer->getTexture().getSubTextureUVs(
+                                data.texture, &params.uvMin, &params.uvMax);
+
                             addFace(params);
                         }
                     }
@@ -91,6 +96,7 @@ void ChunkMesh::rengenerateMesh(const std::shared_ptr<Chunk>& chunk)
         reinterpret_cast<uint8_t*>(m_vertexBufferBase));
 
     m_vertexBuffer.setDynamicData(m_vertexBufferBase, size);
+    CC_LOG_INFO("got {0} faces", m_indicesCount / 6);
 }
 
 void ChunkMesh::addFace(const FaceParams& params)
@@ -98,8 +104,8 @@ void ChunkMesh::addFace(const FaceParams& params)
     // gen vertices
     for (uint8_t i = 0; i < 4; i++)
     {
-        CC_LOG_TRACE(params.direction * 4 + i);
-        m_vertexBufferPtr->position = CUBE_VERTICES[CUBE_INDICES[(params.direction * 4) + i]];
+        const glm::ivec3& vertex = CUBE_VERTICES[CUBE_INDICES[(params.direction * 4) + i]];
+        m_vertexBufferPtr->position = vertex + params.blockPos;
         m_vertexBufferPtr->texCoord.x = CUBE_UVS[i].x ? params.uvMax.x : params.uvMin.x;
         m_vertexBufferPtr->texCoord.y = CUBE_UVS[i].y ? params.uvMax.y : params.uvMin.y;
         m_vertexBufferPtr++;

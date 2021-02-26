@@ -16,6 +16,12 @@ public:
 
     void onUpdate(float delta);
     void onRender();
+    void onEvent(const Event& event);
+
+private:
+    void onWindowResizedEvent(const WindowResizedEvent& event);
+    void onKeyPressedEvent(const KeyPressedEvent& event);
+    void onMouseMovedEvent(const MouseMovedEvent& event);
 
 private:
     ChunkPositionMap<std::shared_ptr<Chunk>> m_chunks;

@@ -4,6 +4,7 @@
 
 #include <spdlog/fmt/ostr.h>
 
+#include <glm/gtx/io.hpp>
 #include <memory>
 
 class Log

@@ -22,17 +22,12 @@ private:
     void onEvent(const Event& event);
     void onWindowClosedEvent(const WindowClosedEvent& event);
     void onWindowResizedEvent(const WindowResizedEvent& event);
-    void onKeyPressedEvent(const KeyPressedEvent& event);
-    void onMouseMovedEvent(const MouseMovedEvent& event);
 
 private:
     bool m_running = false;
     float m_lastFrameTime = 0.0f;
 
     std::unique_ptr<Window> m_window;
-    World* m_world;
     static Application* s_instance;
-
-    Player m_player;
-    Camera m_camera;
+    World* m_world;
 };
