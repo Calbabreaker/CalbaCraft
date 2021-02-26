@@ -40,7 +40,7 @@ TextureAtlas::TextureAtlas(const std::string_view filepath, const glm::uvec2& su
 }
 
 void TextureAtlas::getSubTextureUVs(
-    const glm::uvec2& position, glm::vec2* outMinUV, glm::vec2* outMaxUV)
+    const glm::uvec2& position, glm::vec2* outMinUV, glm::vec2* outMaxUV) const
 {
     glm::vec2 toUVCoord = static_cast<glm::vec2>(m_subTextureSize) / static_cast<glm::vec2>(m_size);
     *outMinUV = static_cast<glm::vec2>(position) * toUVCoord;

@@ -23,6 +23,21 @@ struct ChunkPositionHashKey
 template <typename T>
 using ChunkPositionMap = std::unordered_map<glm::ivec3, T, ChunkPositionHashKey>;
 
+enum Direction : uint32_t
+{
+    NORTH = 0, // (-z)
+    SOUTH = 1, // (+z)
+    EAST = 2,  // (+x)
+    WEST = 3,  // (-x)
+    UP = 4,    // (+y)
+    DOWN = 5   // (-y)
+};
+
+constexpr glm::ivec3 DIRECTION_TO_VECTOR[] = {
+    { 0, 0, -1 }, { 0, 0, 1 }, { 1, 0, 0 }, { -1, 0, 0 }, { 0, 1, 0 }, { 0, -1, 0 },
+};
+
+bool isOutsideChunk(const glm::ivec3& blockPos);
 glm::ivec3 globalBlockToChunkPos(const glm::ivec3& blockPos);
 glm::ivec3 globalToLocalBlockPos(const glm::ivec3& blockPos);
 glm::ivec3 localToGlobalBlockPos(const glm::ivec3& blockPos, const glm::ivec3& chunkPos);

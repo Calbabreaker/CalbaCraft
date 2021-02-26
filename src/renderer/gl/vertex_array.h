@@ -12,7 +12,7 @@ public:
 
     void bind() const;
 
-    void draw();
+    void draw(uint32_t indicesCount = 0);
 
     // automatically calculates stride and offset
     void addVertexBuffer(

@@ -14,3 +14,12 @@ void Chunk::setBlock(const glm::ivec3& blockPos, blockid_t id)
 {
     m_blocks[localBlockPosToIndex(blockPos)] = id;
 }
+
+blockid_t Chunk::getBlock(const glm::ivec3& blockPos) const
+{
+    if (!isOutsideChunk(blockPos))
+        return m_blocks[localBlockPosToIndex(blockPos)];
+    else
+        // TODO: get block from world
+        return 0;
+}

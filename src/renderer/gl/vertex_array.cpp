@@ -17,9 +17,13 @@ void VertexArray::bind() const
     glBindVertexArray(m_handle);
 }
 
-void VertexArray::draw()
+void VertexArray::draw(uint32_t indicesCount)
 {
-    glDrawElements(GL_TRIANGLES, static_cast<int>(m_indicesCount), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(
+        GL_TRIANGLES,
+        static_cast<int>(indicesCount ? indicesCount : m_indicesCount),
+        GL_UNSIGNED_INT,
+        nullptr);
 }
 
 void VertexArray::addVertexBuffer(
