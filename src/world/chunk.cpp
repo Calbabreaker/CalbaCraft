@@ -12,18 +12,19 @@ void Chunk::setChunkPos(const glm::ivec3& chunkPos)
     m_chunkPos = chunkPos;
 
     // load from saved or generate new terrain
-    for (int x = 0; x < CHUNK_SIZE; x++)
+    glm::ivec3 startBlockPos = m_chunkPos * CHUNK_SIZE;
+    glm::ivec3 endBlockPos = startBlockPos + CHUNK_SIZE;
+
+    for (int x = startBlockPos.x; x < endBlockPos.x; x++)
     {
-        for (int z = 0; z < CHUNK_SIZE; z++)
+        for (int z = startBlockPos.z; z < endBlockPos.z; z++)
         {
-            glm::vec3 globalBlockPos = localToGlobalBlockPos({ x, 0, z }, m_chunkPos);
-            int trigY = static_cast<int>(
-                glm::sin(globalBlockPos.x / 10.0f) * glm::cos(globalBlockPos.z / 10.0f) * 10.0f +
-                10.0f);
-            for (int y = 0; y < CHUNK_SIZE; y++)
+            int trigY = static_cast<int>(glm::sin(x / 10.0f) * glm::cos(z / 10.0f) * 10.0f + 10.0f);
+            for (int y = startBlockPos.y; y < endBlockPos.y; y++)
             {
-                if (chunkPos.y * CHUNK_SIZE + y < trigY)
-                    setBlock({ x, y, z }, 1);
+                glm::ivec3 localBlockPos = globalToLocalBlockPos({ x, y, z });
+                if (y < trigY)
+                    setBlock(localBlockPos, 1);
             }
         }
     }
@@ -31,6 +32,7 @@ void Chunk::setChunkPos(const glm::ivec3& chunkPos)
 
 void Chunk::setBlock(const glm::ivec3& blockPos, blockid_t id)
 {
+    CC_ASSERT_MSG(!isOutsideChunk(blockPos), "Failed to set block outside chunk!");
     m_blocks[localBlockPosToIndex(blockPos)] = id;
 }
 

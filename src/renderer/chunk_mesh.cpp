@@ -31,7 +31,7 @@ constexpr glm::vec2 CUBE_UVS[] = {
     { 0.0f, 0.0f }, 
     { 1.0f, 0.0f }, 
     { 1.0f, 1.0f }, 
-    { 1.0f, 0.0f }  
+    { 0.0f, 1.0f }  
 };
 // clang-format on
 
@@ -74,7 +74,7 @@ void ChunkMesh::regenerateMesh(const std::shared_ptr<Chunk>& chunk)
                     const glm::ivec3& dirVec = DIRECTION_TO_VECTOR[params.direction];
                     glm::ivec3 neighbourPos = params.blockPos + dirVec;
 
-                    if (chunk->getBlock(neighbourPos, id) == 0)
+                    if (chunk->getBlock(neighbourPos, 0) == 0)
                     {
                         m_chunkRenderer->getTexture().getSubTextureUVs(
                             data.texture, &params.uvMin, &params.uvMax);
@@ -94,6 +94,7 @@ void ChunkMesh::regenerateMesh(const std::shared_ptr<Chunk>& chunk)
         reinterpret_cast<uint8_t*>(m_vertexBufferBase));
 
     m_vertexBuffer.setDynamicData(m_vertexBufferBase, size);
+    CC_LOG_INFO("Made {0} faces (max is {1})", m_indicesCount / 6, MAX_INDICES_COUNT / 6);
 }
 
 void ChunkMesh::addFace(const FaceParams& params)
@@ -116,5 +117,6 @@ void ChunkMesh::render()
     if (m_indicesCount == 0)
         return;
 
+    m_vertexArray.bind();
     m_vertexArray.draw(m_indicesCount);
 }

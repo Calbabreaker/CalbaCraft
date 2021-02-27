@@ -89,8 +89,12 @@ static inline void CC_DEBUGBREAK(void)
     #define CC_ASSERT_MSG(expr, msg, ...)                                                          \
         CC_INTERNAL_ASSERT_IMPL(expr, "Assertion failed: " msg, ##__VA_ARGS__)
     #define CC_ASSERT(expr)                                                                        \
-        CC_INTERNAL_ASSERT_IMPL(expr, "Assertion '{0}' failed at: {1}:{2}", #expr,                 \
-                                std::filesystem::path(__FILE__).filename().string(), __LINE__)
+        CC_INTERNAL_ASSERT_IMPL(                                                                   \
+            expr,                                                                                  \
+            "Assertion '{0}' failed at: {1}:{2}",                                                  \
+            #expr,                                                                                 \
+            std::filesystem::path(__FILE__).filename().string(),                                   \
+            __LINE__)
 
 #else
     #define CC_ASSERT_MSG(expr, ...)
