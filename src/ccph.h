@@ -13,6 +13,7 @@
 
 // ---- Data Structures ----
 #include <array>
+#include <queue>
 #include <sstream>
 #include <string>
 #include <string_view>

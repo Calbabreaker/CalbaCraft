@@ -94,7 +94,6 @@ void ChunkMesh::regenerateMesh(const std::shared_ptr<Chunk>& chunk)
         reinterpret_cast<uint8_t*>(m_vertexBufferBase));
 
     m_vertexBuffer.setDynamicData(m_vertexBufferBase, size);
-    CC_LOG_INFO("Made {0} faces (max is {1})", m_indicesCount / 6, MAX_INDICES_COUNT / 6);
 }
 
 void ChunkMesh::addFace(const FaceParams& params)

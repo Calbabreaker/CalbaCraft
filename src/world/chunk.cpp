@@ -9,6 +9,7 @@ Chunk::Chunk(World* world, const std::shared_ptr<ChunkMesh>& mesh)
 
 void Chunk::setChunkPos(const glm::ivec3& chunkPos)
 {
+    m_blocks = { 0 };
     m_chunkPos = chunkPos;
 
     // load from saved or generate new terrain
@@ -22,9 +23,12 @@ void Chunk::setChunkPos(const glm::ivec3& chunkPos)
             int trigY = static_cast<int>(glm::sin(x / 10.0f) * glm::cos(z / 10.0f) * 10.0f + 10.0f);
             for (int y = startBlockPos.y; y < endBlockPos.y; y++)
             {
-                glm::ivec3 localBlockPos = globalToLocalBlockPos({ x, y, z });
                 if (y < trigY)
+                {
+                    CC_ASSERT(y < 20);
+                    glm::ivec3 localBlockPos = globalToLocalBlockPos({ x, y, z });
                     setBlock(localBlockPos, 1);
+                }
             }
         }
     }

@@ -25,6 +25,13 @@ private:
     void onKeyPressedEvent(const KeyPressedEvent& event);
     void onMouseMovedEvent(const MouseMovedEvent& event);
 
+    void regenerateChunksNeccesery();
+    void moveChunksAtAxis(
+        const int& axisIndex,
+        const int& chunksMovedAbs,
+        const int& chunkGrabDir,
+        const glm::ivec3& playerChunkPos);
+
 private:
     ChunkPositionMap<std::shared_ptr<Chunk>> m_chunks;
     std::unordered_set<glm::ivec3, ChunkPositionHashKey> m_chunkMeshUpdates;

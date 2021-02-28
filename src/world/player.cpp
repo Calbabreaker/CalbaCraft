@@ -29,8 +29,9 @@ void Player::onUpdate(float)
     if (Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT))
         force -= up;
 
+    constexpr float walkSpeed = 10.0f;
     if (glm::length(force) != 0)
-        m_acceleration += glm::normalize(force);
+        m_acceleration += glm::normalize(force) * walkSpeed;
 }
 
 void Player::onMouseMoved(const glm::vec2& offset)

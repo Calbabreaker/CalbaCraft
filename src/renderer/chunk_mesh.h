@@ -48,7 +48,7 @@ private:
 
     Vertex* m_vertexBufferBase;
     Vertex* m_vertexBufferPtr;
-    uint32_t m_indicesCount;
+    uint32_t m_indicesCount = 0;
     glm::ivec3 m_chunkPos;
 
     ChunkRenderer* m_chunkRenderer;
