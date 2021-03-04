@@ -15,10 +15,11 @@ class ChunkMesh
 public:
     struct FaceParams
     {
+        FaceParams(glm::ivec3& bp, Direction& d) : blockPos(bp), direction(d) {}
+        glm::ivec3& blockPos;
+        Direction& direction;
         glm::vec2 uvMin;
         glm::vec2 uvMax;
-        glm::ivec3 blockPos;
-        Direction direction;
     };
 
     struct Vertex
@@ -32,7 +33,7 @@ public:
 
     void render();
 
-    void regenerateMesh(const std::shared_ptr<Chunk>& chunk);
+    void regenerateMesh(const Chunk& chunk);
     void addFace(const FaceParams& params);
 
     const glm::ivec3& getChunkPos() { return m_chunkPos; }

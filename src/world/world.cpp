@@ -13,7 +13,7 @@ World::World()
     window.setMouseLocked(true);
     m_camera.setViewportSize(window.getWidth(), window.getHeight());
     m_camera.fov = glm::radians(Config::getSettings().fov);
-    m_player.position = { 0.0f, 0.0f, 1.0f };
+    setLoadedChunkCenter({ 0, 0, 0 });
 }
 
 World::~World()
@@ -25,18 +25,14 @@ void World::onUpdate(float delta)
     m_player.update(delta);
 
     // update chunks if player moved to new one
-    regenerateChunksNeccesery();
-
-    // update chunk meshes
-    for (const glm::ivec3& chunkPos : m_chunkMeshUpdates)
+    glm::ivec3 playerChunkPos =
+        globalBlockToChunkPos(static_cast<glm::ivec3>(m_player.position) * 2);
+    if (m_loadedChunksPosCenter != playerChunkPos)
     {
-        auto iter = m_chunks.find(chunkPos);
-        CC_ASSERT_MSG(iter != m_chunks.end(), "Cannot regenerate non existing chunk!");
-
-        iter->second->getChunkMesh()->regenerateMesh(iter->second);
+        setLoadedChunkCenter(playerChunkPos);
     }
 
-    m_chunkMeshUpdates.clear();
+    updateChunkMeshes();
 }
 
 void World::onRender()
@@ -53,14 +49,14 @@ void World::onEvent(const Event& event)
     dispatcher.dispatch<MouseMovedEvent>(CC_BIND_FUNC(World::onMouseMovedEvent));
 }
 
-blockid_t World::getBlock(const glm::ivec3& blockPos, blockid_t notFoundReturn) const
+blockid_t World::getBlock(const glm::ivec3& blockPos) const
 {
     glm::ivec3 chunkPos = globalBlockToChunkPos(blockPos);
     auto iter = m_chunks.find(chunkPos);
     if (iter != m_chunks.end())
         return iter->second->getBlock(globalToLocalBlockPos(blockPos));
     else
-        return notFoundReturn;
+        return 0;
 }
 
 void World::onWindowResizedEvent(const WindowResizedEvent& event)
@@ -82,84 +78,80 @@ void World::onMouseMovedEvent(const MouseMovedEvent& event)
         m_player.onMouseMoved(event.offset);
 }
 
-void World::regenerateChunksNeccesery()
+void World::updateChunkMeshes()
 {
-    glm::ivec3 playerChunkPos =
-        globalBlockToChunkPos(static_cast<glm::ivec3>(m_player.position) * 2);
-    if (playerChunkPos != m_loadedChunkPosCenter || m_chunks.size() == 0)
+    if (!m_chunkMeshUpdates.empty())
     {
-        // no chunks then make them around the player
-        if (m_chunks.size() == 0)
-        {
-            const int& renderDistance = Config::getSettings().renderDistance;
-            glm::ivec3 minPoint = playerChunkPos - renderDistance;
-            glm::ivec3 maxPoint = playerChunkPos + renderDistance + 1;
+        const glm::ivec3& chunkPos = m_chunkMeshUpdates.front();
+        auto iter = m_chunks.find(chunkPos);
 
-            for (int x = minPoint.x; x < maxPoint.y; x++)
-            {
-                for (int y = minPoint.y; y < maxPoint.y; y++)
-                {
-                    for (int z = minPoint.z; z < maxPoint.z; z++)
-                    {
-                        glm::ivec3 chunkPos = { x, y, z };
-                        std::shared_ptr<Chunk> newChunk =
-                            std::make_shared<Chunk>(this, m_chunkRenderer.newChunkMesh());
-                        newChunk->setChunkPos(chunkPos);
-                        m_chunkMeshUpdates.insert(chunkPos);
-                        m_chunks[chunkPos] = newChunk;
-                    }
-                }
-            }
-        }
-        else
-        {
-            // move the chunks to the new pos
-            glm::ivec3 chunksMoved = playerChunkPos - m_loadedChunkPosCenter;
-            glm::ivec3 chunksMovedAbsVec = glm::abs(chunksMoved);
-            glm::ivec3 chunkGrabDirVec = glm::sign(chunksMoved);
-            moveChunksAtAxis(0, chunksMovedAbsVec.x, chunkGrabDirVec.x, playerChunkPos);
-            moveChunksAtAxis(1, chunksMovedAbsVec.y, chunkGrabDirVec.y, playerChunkPos);
-            moveChunksAtAxis(2, chunksMovedAbsVec.z, chunkGrabDirVec.z, playerChunkPos);
-        }
+        if (iter != m_chunks.end())
+            iter->second->regenerate();
 
-        m_loadedChunkPosCenter = playerChunkPos;
+        m_chunkMeshUpdates.pop();
     }
 }
 
-void World::moveChunksAtAxis(
-    const int& axisIndex,
-    const int& chunksMovedAbs,
-    const int& chunkGrabDir,
-    const glm::ivec3& playerChunkPos)
+void World::setLoadedChunkCenter(const glm::ivec3& centerPosToSet)
 {
     const int& renderDistance = Config::getSettings().renderDistance;
-    int numberOfTimesToMove = glm::max(renderDistance - chunksMovedAbs, 0);
 
-    // moves the entire 'face' of chunks amount of times needed
-    for (int axisValue = renderDistance; axisValue > numberOfTimesToMove; axisValue--)
+    std::queue<glm::ivec3> neededChunksPos;
+    glm::ivec3 toSetStartPoint = centerPosToSet - renderDistance;
+    glm::ivec3 toSetEndPoint = centerPosToSet + (renderDistance + 1);
+    for (int x = toSetStartPoint.x; x < toSetEndPoint.x; x++)
     {
-        for (int axisValue2 = -renderDistance; axisValue2 <= renderDistance; axisValue2++)
+        for (int y = toSetStartPoint.y; y < toSetEndPoint.y; y++)
         {
-            for (int axisValue3 = -renderDistance; axisValue3 <= renderDistance; axisValue3++)
+            for (int z = toSetStartPoint.z; z < toSetEndPoint.z; z++)
             {
-                glm::ivec3 chunkPosOffset;
-                int* posPointer = glm::value_ptr(chunkPosOffset);
-                posPointer[(axisIndex + 1) % 3] = axisValue2;
-                posPointer[(axisIndex + 2) % 3] = axisValue3;
-
-                posPointer[axisIndex] = -axisValue * chunkGrabDir;
-                glm::ivec3 chunkToMovePos = m_loadedChunkPosCenter + chunkPosOffset;
-
-                posPointer[axisIndex] = axisValue * chunkGrabDir;
-                glm::ivec3 chunkDestPos = playerChunkPos + chunkPosOffset;
-
-                const std::shared_ptr<Chunk>& chunkToMove = m_chunks[chunkToMovePos];
-                chunkToMove->setChunkPos(chunkDestPos);
-                m_chunkMeshUpdates.insert(chunkDestPos);
-
-                m_chunks[chunkDestPos] = chunkToMove;
-                m_chunks.erase(chunkToMovePos);
+                glm::ivec3 chunkPos = { x, y, z };
+                auto iter = m_chunks.find(chunkPos);
+                if (iter == m_chunks.end())
+                    neededChunksPos.emplace(chunkPos);
             }
         }
     }
+
+    glm::ivec3 centerStartPoint = m_loadedChunksPosCenter - renderDistance;
+    glm::ivec3 centerEndPoint = m_loadedChunksPosCenter + (renderDistance + 1);
+    for (int x = centerStartPoint.x; x < centerEndPoint.x; x++)
+    {
+        for (int y = centerStartPoint.y; y < centerEndPoint.y; y++)
+        {
+            for (int z = centerStartPoint.z; z < centerEndPoint.z; z++)
+            {
+                glm::ivec3 chunkPos = { x, y, z };
+
+                // check out of bounds of player chunk position
+                if (chunkPos.x < toSetStartPoint.x || chunkPos.x >= toSetEndPoint.x ||
+                    chunkPos.y < toSetStartPoint.y || chunkPos.y >= toSetEndPoint.y ||
+                    chunkPos.z < toSetStartPoint.z || chunkPos.z >= toSetEndPoint.z)
+                {
+                    CC_ASSERT_MSG(!neededChunksPos.empty(), "Too many spare chunks!");
+                    const glm::ivec3& neededChunkPos = neededChunksPos.front();
+
+                    auto iter = m_chunks.find(chunkPos);
+                    if (iter != m_chunks.end())
+                    {
+                        iter->second->setChunkPos(neededChunkPos);
+                        m_chunks[neededChunkPos] = iter->second;
+                        m_chunks.erase(chunkPos);
+                    }
+                    else
+                    {
+                        std::shared_ptr chunk =
+                            std::make_shared<Chunk>(this, m_chunkRenderer.newChunkMesh());
+                        chunk->setChunkPos(neededChunkPos);
+                        m_chunks[neededChunkPos] = chunk;
+                    }
+
+                    m_chunkMeshUpdates.emplace(neededChunkPos);
+                    neededChunksPos.pop();
+                }
+            }
+        }
+    }
+
+    m_loadedChunksPosCenter = centerPosToSet;
 }
