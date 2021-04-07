@@ -38,5 +38,5 @@ private:
     Camera m_camera;
     ChunkRenderer m_chunkRenderer;
 
-    glm::ivec3 m_loadedChunksPosCenter;
+    glm::ivec3 m_loadedChunksPosCenter = {1000.0f, 1000.0f, 1000.0f};
 };
